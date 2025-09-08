@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&display=swap');
+
+@font-face {
+    font-family: "Gotham";
+    src: url(../src/assets//Gotham-Font/GothamNarrow-Medium.otf);
+}
+
+body {
+  @apply  font-body;
+  @apply bg-light-white;
+}
+@layer components {
+  .white-btn {
+    @apply bg-white text-black lg:text-[18px] md:text-[16px] text-[14px] font-semibold xl:gap-10 lg:gap-8 md:gap-6 gap-4 items-center md:px-6 px-4 md:py-[18px] py-3 hover:bg-white transition-colors duration-300 rounded-full border border-white hover:bg-transparent hover:text-white;
+  }
+}
+@layer components {
+  .black-btn {
+    @apply bg-black flex lg:text-[18px] md:text-[16px] text-[14px] text-white font-semibold xl:gap-10 lg:gap-4 md:gap-6 gap-4 items-center lg:px-[18px] md:px-4 px-3 md:py-[18px] py-3 transition-colors duration-300 rounded-full border border-black hover:bg-white hover:text-black;
+  }
+}
+@layer components {
+  .red-btn {
+    @apply bg-primary flex lg:text-[18px] md:text-[16px] text-[14px] text-white font-semibold xl:gap-10 lg:gap-8 md:gap-6 gap-4 items-center lg:px-[18px] md:px-4 px-3 md:py-[18px] py-3 transition-colors duration-300 rounded-full border border-primary hover:bg-white hover:text-primary;
+  }
+}
+.header-navbar .mobile-nemu {
+  transform: translateX(110%);
+  transition: 0.6s;
+}
+.header-navbar.nav-active .mobile-nemu {
+  transform: translateX(0%);
+}
+
+
+.navbar a {
+  position: relative;
+  width: fit-content;
+}
+
+.navbar a::before,
+.navbar a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: width 0.3s ease, left 0.3s ease, right 0.3s ease;
+  bottom: 0;
+}
+
+.navbar a::before {
+  left: 50%;
+}
+
+.navbar a::after {
+  right: 50%;
+}
+
+.navbar a:hover::before {
+  width: 50%;
+  left: 0;
+}
+
+.navbar a:hover::after {
+  width: 50%;
+  right: 0;
+}
+
+.navbar a.active {
+  font-weight: 600;
+}
+
+.navbar a.active::before {
+  width: 50%;
+  left: 0;
+}
+
+.navbar a.active::after {
+  width: 50%;
+  right: 0;
+}
+
+.swiper-card a {
+  position: relative;
+  width: fit-content;
+}
+
+.swiper-card a::before,
+.swiper-card a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: black;
+  transition: width 0.3s ease, left 0.3s ease, right 0.3s ease;
+  bottom: 0;
+}
+
+.swiper-card a::before {
+  left: 50%;
+}
+
+.swiper-card a::after {
+  right: 50%;
+}
+
+.swiper-card:hover a::before {
+  width: 50%;
+  left: 0;
+}
+
+.swiper-card:hover a::after {
+  width: 50%;
+  right: 0;
+}
+
+
+.custom-pagination .swiper-pagination-bullet {
+  width: 42px;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  opacity: 1;
+  margin-left: 8px;
+}
+
+.custom-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background-color: white;
+}
+
+
+.custom-html ol,
+.custom-html ul,
+.custom-html menu {
+  margin: 16px 0;
+  padding-left: 16px;
+  list-style: revert;
+}
+.custom-html ol,
+.custom-html ul,
+.custom-html menu {
+  margin: 16px 0;
+  padding-left: 16px;
+  list-style: revert;
+  line-height: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
