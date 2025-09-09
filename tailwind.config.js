@@ -26,12 +26,12 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Montserrat', 'sans-serif'],
-        playfairDisplay: ['Gotham', 'sans-serif'],
+        body: ['Cinzel', 'sans-serif'],
+        playfairDisplay: ['EB Garamond', 'sans-serif'],
         quicksand: ['Quicksand', 'sans-serif'],
       },
       colors: {
-        primary: "#D4AF37",
+        primary: "#C5A24C",
         "light-white": "#FBFAF7",
         black: "#000000",
         white: "#FFFFFF",
@@ -47,7 +47,7 @@ export default {
         xl: "0.938rem",
       },
       backgroundImage: {
-        "primary-gradient": "linear-gradient(119.63deg, #D4AF37 -28%, #000000 68.13%)",
+        "primary-gradient": "linear-gradient(119.63deg, #C5A24C -28%, #000000 68.13%)",
         "black-gradient": "linear-gradient(180deg, #00000000 43.33%, #000000b3 100%)",
         "black-light-gradient": "linear-gradient(180deg, #0000001a 13.85%, #00000099 100%)",
         "black-dark-light-gradient": "linear-gradient(0deg, #00000000 70.11%, #00000080 100%)",

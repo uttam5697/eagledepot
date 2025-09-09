@@ -95,11 +95,11 @@ export default function SpsFlooring({ productCategory }: any) {
                     />
                     <div className="absolute z-20 bottom-0 w-full p-[10px]">
                       <div className=" backdrop-blur-[10px] rounded-2xl px-4 py-3">
-                        <h2 className="font-playfairDisplay text-white xl:text-4xl lg:text-3xl md:text-2xl text-base leading-none group-hover:hidden">
+                        <h2 className="font-playfairDisplay text-white xl:text-2xl lg:text-xl md:text-lg text-base leading-none group-hover:hidden">
                           {item.title}
                         </h2>
                         <div className="absolute transition-transform duration-500 translate-y-full group-hover:translate-y-0 group-hover:relative">
-                          <h2 className="font-playfairDisplay text-white xl:text-4xl lg:text-3xl md:text-2xl text-base leading-none">
+                          <h2 className="font-playfairDisplay text-white xl:text-2xl lg:text-xl md:text-lg text-base leading-none">
                             {item.title}
                           </h2>
                           <p

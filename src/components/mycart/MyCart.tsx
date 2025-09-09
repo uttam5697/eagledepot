@@ -132,7 +132,7 @@ export default function MyCart() {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="relative w-12 h-12">
-          <div className="absolute top-0 left-0 w-full h-full rounded-full border-t-2 border-b-2 border-[#D4AF37] animate-spin"></div>
+          <div className="absolute top-0 left-0 w-full h-full rounded-full border-t-2 border-b-2 border-[#C5A24C] animate-spin"></div>
         </div>
         <p className="ml-4">Loading your cart...</p>
       </div>

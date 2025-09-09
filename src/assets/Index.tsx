@@ -1,4 +1,5 @@
 import Logo from "./logo/logo1.png";
+import FooterLogo from "./logo/footer-logo.jpeg";
 import FlooringImg from "./images/sps-flooring/flooring-img.png";
 import HeroBanner from "./images/herobanner/herobanner-img.png";
 import PayCard from "./images/pay-card/pay-card.svg";
@@ -22,6 +23,7 @@ import AboutUsImg from "./images/about-us-img.png";
 import ScrollDown from "./images/scroll-down.gif";
 
 export {
+  FooterLogo,
   ScrollDown,
   AboutUsImg,
   ContactUsImg,

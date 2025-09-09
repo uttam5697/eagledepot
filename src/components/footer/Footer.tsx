@@ -1,5 +1,5 @@
 import { FiMapPin, FiPhoneCall } from "react-icons/fi";
-import { Logo, PayCard, PayCard2, PayCard3, PayCard4, PayCard5 } from "../../assets/Index";
+import { FooterLogo, PayCard, PayCard2, PayCard3, PayCard4, PayCard5 } from "../../assets/Index";
 import { PiEnvelopeSimple } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import { useFooter } from "../../api/home";
@@ -17,11 +17,11 @@ export default function Footer() {
           <div className="col-start-1 xl:col-end-7 lg:col-end-7 md:col-end-8 sm:col-end-10 col-end-13">
             <div className="flex gap-4 md:flex-nowrap flex-wrap">
               <img
-                src={Logo}
+                src={FooterLogo}
                 alt="Eagle Logo"
-                className="xl:h-[92px] flex-none lg:h-[72px] md:h-[52px] h-[32px]"
+                className="xl:h-[150px] flex-none lg:h-[130px] md:h-[110px] h-[90px]"
               />
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3414.3410325894683!2d-80.38079262481548!3d25.80113747732704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9beba67a1bb85%3A0xc9d6b35256aebd08!2s2900%20NW%20112th%20Ave%2C%20Doral%2C%20FL%2033172%2C%20USA!5e1!3m2!1sen!2sin!4v1756309023250!5m2!1sen!2sin"
+              <iframe  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2891.7645749083354!2d-73.98395022417803!3d40.31361477145636!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c224d5e00f2cb9%3A0x3222469a3066bc57!2s93%20Joline%20Ave%2C%20Long%20Branch%2C%20NJ%2007740%2C%20USA!5e1!3m2!1sen!2sin!4v1757407824325!5m2!1sen!2sin"
                 width="100%" height="112" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade">
               </iframe>
             </div>

@@ -268,7 +268,7 @@ export default function CheckoutForm({
             !agreed || loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
           }`}
           style={{
-            background: "#D4AF37",
+            background: "#C5A24C",
             boxShadow: "0 2px 8px rgba(110, 80, 255, 0.06)",
           }}
         >
