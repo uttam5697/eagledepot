@@ -1,91 +1,61 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import React, { useState, useEffect } from "react";
 
-
-
-type SortDropdownProps = {
-  options: any;
+type SortTabsProps = {
+  options?: any[]; // ✅ make it optional to avoid runtime error
   onChange: (value: string) => void;
   defaultValue?: string;
-  width?: string;
   sortbytext?: boolean;
-  text: string;
 };
 
-const SortDropdown: React.FC<SortDropdownProps> = ({
-  options,
-  width,
-  sortbytext,
+const SortDropdown: React.FC<SortTabsProps> = ({
+  options = [], // ✅ fallback to empty array if undefined
   onChange,
-  defaultValue = "ALL", // default to ALL
+  sortbytext,
+  defaultValue = "ALL",
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string>(defaultValue);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-      setIsOpen(false);
-    }
-  };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    onChange(selected); // call parent filter function when selected changes
+  }, [selected, onChange]);
 
   const handleSelect = (value: string) => {
     setSelected(value);
-    onChange(value);
-    setIsOpen(false);
   };
 
-  const selectedLabel =
-    selected === 'ALL'
-      ? 'All'
-      : options.find((opt: any) => opt.product_category_id === selected)?.title || '';
-
   return (
-    <div
-      ref={dropdownRef}
-      className={`w-full relative lg:text-sm md:text-[14px] text-[12px] ${width}`}
-    >
-      <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-between w-full rounded-full border-[1px] border-black lg:px-5 md:px-4 px-3 lg:py-[18px] md:py-4 py-3 bg-white text-black"
-      >
-        <span className="font-light leading-none">
-          {sortbytext ? 'Sort by: ' : ''}
-          <span className="font-semibold">{selectedLabel}</span>
-        </span>
-        <ChevronDown size={16} className="ml-2" />
-      </button>
+    <div className="w-full">
+      {sortbytext && (
+        <span className="block mb-2 font-light lg:text-sm">Sort by:</span>
+      )}
 
-      {isOpen && (
-        <div className="absolute z-10 mt-2 w-full rounded-md border border-gray-200 bg-white shadow-md max-h-60 overflow-y-auto">
-          <div
-            onClick={() => handleSelect('ALL')}
-            className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
-              selected === 'ALL' ? 'font-semibold text-black' : 'text-gray-700'
-            }`}
-          >
-            All
-          </div>
-          {options.map((option: any) => (
-            <div
+      {/* Tabs */}
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth">
+        <button
+          onClick={() => handleSelect("ALL")}
+          className={`transition-all flex-none duration-300 ease-in-out after:transition-all after:duration-300 after:ease-in-out relative hover:text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] hover:after:w-full after:bg-white
+            ${selected === "ALL" ? " text-white after:w-full" : " text-white/70 after:w-0"}`}
+        >
+          All
+        </button>
+
+        {options.length > 0 &&
+          options.map((option) => (
+            <button
               key={option.product_category_id}
               onClick={() => handleSelect(option.product_category_id)}
-              className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
-                option.product_category_id === selected
-                  ? 'font-semibold text-black'
-                  : 'text-gray-700'
-              }`}
+              className={`transition-all flex-none duration-300 ease-in-out after:transition-all after:duration-300 after:ease-in-out relative hover:text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] hover:after:w-full after:bg-white
+                ${
+                  selected === option.product_category_id
+                    ? "text-white after:w-full"
+                    : "text-white/70 after:w-0"
+                }`}
             >
               {option.title}
-            </div>
+            </button>
           ))}
-        </div>
-      )}
+      </div>
+
     </div>
   );
 };

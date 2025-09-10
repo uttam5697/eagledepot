@@ -62,7 +62,7 @@ export default function WeeklyBestsellers() {
             } lg:mb-[80px] md:mb-[60px] mb-[40px] bg-primary-gradient xl:pt-[60px] lg:pt-[50px] md:pt-[40px] pt-[30px] xl:pb-[75px] lg:pb-[65px] md:pb-[55px] pb-[45px]`}
             >
             <div className="container">
-                <div className="2xl:mb-10 xl:mb-8 lg:mb-6 md:mb-4 mb-2 flex justify-between items-center">
+                <div className="2xl:mb-10 xl:mb-8 lg:mb-6 mb-4 flex justify-between items-center flex-wrap">
                     <div>
                         <h1 className="text-white font-extralight 2xl:text-4.5xl xl:text-4xl lg:text-3xl md:text-2xl text-base xl:leading-none leading-normal">
                             {generaldata?.weekly_bestsellers_title}
@@ -71,7 +71,7 @@ export default function WeeklyBestsellers() {
                             {generaldata?.weekly_bestsellers_sub_title}
                         </h1>
                     </div>
-                    <div className="flex items-center xl:gap-10 lg:gap-8 md:gap-6 gap-4">
+                    <div className="flex items-end md:gap-4 gap-2 flex-col">
                         <SortDropdown text="Sort by" sortbytext={false} width={"xl:w-[200px] lg:w-[180px] md:w-[160px] w-[140px]"} options={productCategoryData} onChange={handleSortChange} />
                         <div className="flex lg:gap-5 md:gap-3 gap-2 items-center">
                             <button

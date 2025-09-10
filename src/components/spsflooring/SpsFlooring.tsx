@@ -44,7 +44,7 @@ export default function SpsFlooring({ productCategory }: any) {
         <Swiper
           className="!overflow-visible"
           spaceBetween={12}
-          slidesPerView={1.5}
+          slidesPerView="auto"
           navigation={{
             prevEl: prevRef.current!,
             nextEl: nextRef.current!,
@@ -60,50 +60,28 @@ export default function SpsFlooring({ productCategory }: any) {
               swiper.params.navigation.nextEl = nextRef.current;
             }
           }}
-          breakpoints={{
-            120: {
-              slidesPerView: 1.5,
-              spaceBetween: 10,
-            },
-            540: {
-              slidesPerView: 2.5,
-              spaceBetween: 10,
-            },
-            768: {
-              slidesPerView: 2.5,
-              spaceBetween: 15,
-            },
-            1024: {
-              slidesPerView: 3.5,
-              spaceBetween: 24,
-            },
-            1300: {
-              slidesPerView: 4.2,
-              spaceBetween: 24,
-            },
-          }}
         >
           {productCategory?.map((item: any, index: number) => (
             <>
-              <SwiperSlide key={index} className="!h-auto">
-                <div className="w-full xl:h-[420px] lg:h-[380] md:h-[340px] h-[300px] relative group overflow-hidden rounded-[30px]">
-                  <div className="relative h-full before:rounded-[30px] before:bg-black-gradient before:absolute before:w-full before:h-full before:z-10">
+              <SwiperSlide key={index} className="!h-auto !w-auto">
+                <div className="xl:h-[300px] xl:w-[300px] md:h-[250px] md:w-[250px] h-[220px] w-[220px] relative group overflow-hidden rounded-full">
+                  <div className="relative h-full before:rounded-full rounded-full before:bg-black-gradient before:absolute before:w-full before:h-full before:z-10">
                     <img
-                      className="rounded-[30px] h-full object-cover object-center w-full transition-transform duration-500 group-hover:scale-110"
+                      className="rounded-full h-full object-cover object-center w-full transition-transform duration-500 group-hover:scale-110"
                       src={item.image}
                       alt="FlooringImg"
                     />
-                    <div className="absolute z-20 bottom-0 w-full p-[10px]">
-                      <div className=" backdrop-blur-[10px] rounded-2xl px-4 py-3">
-                        <h2 className="font-playfairDisplay text-white xl:text-2xl lg:text-xl md:text-lg text-base leading-none group-hover:hidden">
+                    <div className="absolute z-20 bottom-0 w-full p-[10px] -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 h-fit">
+                      <div className=" backdrop-blur-[10px] rounded-2xl px-8 py-3">
+                        <h2 className="font-playfairDisplay text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none group-hover:hidden">
                           {item.title}
                         </h2>
                         <div className="absolute transition-transform duration-500 translate-y-full group-hover:translate-y-0 group-hover:relative">
-                          <h2 className="font-playfairDisplay text-white xl:text-2xl lg:text-xl md:text-lg text-base leading-none">
+                          <h2 className="font-playfairDisplay text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none">
                             {item.title}
                           </h2>
                           <p
-                            className="font-quicksand text-white xl:text-[20px] lg:text-[16px] md:text-[14px] text-[12px] leading-none custom-html"
+                            className="font-quicksand text-white xl:text-[16px] lg:text-[14px] md:text-[12px] text-[12px] leading-none custom-html"
                             dangerouslySetInnerHTML={{
                               __html: item.description,
                             }}
@@ -118,7 +96,7 @@ export default function SpsFlooring({ productCategory }: any) {
                           >
                             <a
                               href="#"
-                              className="group text-black xl:text-[18px] lg:text-[16px] md:text-sm text-xs font-quicksand font-bold md:px-4 px-3 lg:py-[18px] md:py-4 py-3 bg-white rounded-full flex justify-between items-center gap-4"
+                              className="group text-black xl:text-[16px] lg:text-[14px] md:text-sm text-xs font-quicksand font-bold md:p-3 p-2 bg-white rounded-full flex justify-between items-center gap-4"
                             >
                               See Detail
                               <FiArrowUpRight className="lg:text-base md:text-2sm text-sm group-hover:rotate-45 duration-300 transition-all" />

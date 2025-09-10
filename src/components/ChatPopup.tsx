@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { Logo } from "../assets/Index";
+import { IoLogoWhatsapp } from "react-icons/io";
+
 
 interface FormData {
   name: string;
@@ -56,9 +58,9 @@ const ChatPopup: React.FC = () => {
       <button
         onClick={togglePopup}
         aria-label={isOpen ? "Close chat popup" : "Open chat popup"}
-        className="fixed bottom-5 right-5 bg-gradient-to-r from-primary to-primary text-white text-[32px] w-[60px] h-[60px] rounded-full shadow-2xl hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all z-40"
+        className="fixed bottom-5 right-5 bg-gradient-to-r from-primary flex items-center justify-center to-primary text-white text-[32px] w-[60px] h-[60px] rounded-full shadow-2xl hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all z-40"
       >
-        {isOpen ? "✖" : "💬"}
+        {isOpen ? "✖" : <IoLogoWhatsapp size={32} color="#fff" />}
       </button>
 
       {/* Overlay */}

@@ -118,7 +118,7 @@ export default function WhatOurClients() {
             homedata?.client_say
               ?.map((client: any) => (
                 <SwiperSlide className="pb-4 !h-auto">
-                  <div className="bg-white h-full flex flex-col xl:p-10 lg:p-8 md:p-6 p-4 rounded-[34px] group hover:shadow-md transition-all duration-300 ease-in-out">
+                  <div className="bg-white h-full flex flex-col xl:p-10 lg:p-8 md:p-6 p-4 rounded-tl-[34px] rounded-br-[34px] group hover:shadow-md transition-all duration-300 ease-in-out">
                     <h4 className="text-black mb-[14px] font-playfairDisplay 2xl:text-[32px] xl:text-2xl lg:text-xl md:text-base text-2sm leading-none">
                       {client.name}
                     </h4>
@@ -126,8 +126,8 @@ export default function WhatOurClients() {
                     <p className="font-extralight xl:mb-[36px] lg:mb-[26px] md:mb-5 mb-4">
                       {client.description}
                     </p>
-                    <div className="w-[90px] h-[90px] mt-auto rounded-[24px] overflow-hidden">
-                      <img src={client.image} alt="ClientImg" className="w-[90px] h-[90px] rounded-[24px] transition-all duration-300 ease-in-out group-hover:scale-105 object-cover" />
+                    <div className="w-[90px] h-[90px] mt-auto rounded-tl-[24px] rounded-br-[24px] overflow-hidden">
+                      <img src={client.image} alt="ClientImg" className="w-[90px] h-[90px] rounded-tl-[24px] rounded-br-[24px] transition-all duration-300 ease-in-out group-hover:scale-105 object-cover" />
                     </div>
                   </div>
                 </SwiperSlide>

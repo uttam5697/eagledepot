@@ -129,14 +129,6 @@ body {
   background-color: white;
 }
 
-
-.custom-html ol,
-.custom-html ul,
-.custom-html menu {
-  margin: 16px 0;
-  padding-left: 16px;
-  list-style: revert;
-}
 .custom-html ol,
 .custom-html ul,
 .custom-html menu {
@@ -145,7 +137,9 @@ body {
   list-style: revert;
   line-height: normal;
 }
-
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
