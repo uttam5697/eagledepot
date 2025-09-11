@@ -215,7 +215,7 @@ export default function Footer() {
       <div className="container">
         <div className="flex items-center justify-between flex-wrap gap-4 xl:pt-10 lg:pt-8 md:pt-6 pt-4">
           <p className="font-light md:text-sm text-[14px] text-white">
-            Copyright © {currentYear} <a href="#" target="_blank" className="font-semibold">Eagle Flooring Depot – SPC and LVT flooring for less</a> All Rights Reserved
+            Copyright © {currentYear} <a href="#" target="_blank" className="font-semibold">Eagle Flooring Depot – </a> All Rights Reserved
           </p>
           <div className="flex lg:gap-[10px] md:gap-2 gap-1">
             <img src={PayCard} alt="PayCard" />
