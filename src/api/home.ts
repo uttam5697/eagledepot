@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAboutData, getGeneralData, getHomeData } from "../hook/useHome";
+import { getAboutData, getGeneralData, getHomeData, getShipingData } from "../hook/useHome";
 
 
 export const useHome = (skip = false) => {
@@ -34,6 +34,19 @@ export const useFooter = (skip = false) => {
 
     return query;
 };
+export const useShiping = (skip = false) => {
+    const query = useQuery({
+        queryKey: ["footer"],
+        queryFn: () => getShipingData(),
+        refetchOnWindowFocus: false,
+        enabled: !skip,
+    });
+
+    return query;
+};
+
+
+
 
 
 

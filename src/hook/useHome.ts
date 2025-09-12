@@ -18,3 +18,9 @@ export const getGeneralData = async (
   const res = await api.get("/beforeauth/setting");
   return res.data;
 };
+
+export const getShipingData = async (
+) => {
+  const res = await api.get("/beforeauth/getshippingcharge");
+  return res.data;
+};

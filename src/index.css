@@ -4,6 +4,8 @@
     font-family: "Gotham";
     src: url(../src/assets//Gotham-Font/GothamNarrow-Medium.otf);
 }
+@import "leaflet/dist/leaflet.css";
+
 
 body {
   @apply  font-body;
@@ -23,6 +25,10 @@ body {
   .red-btn {
     @apply bg-primary flex lg:text-[18px] md:text-[16px] text-[14px] text-white font-semibold xl:gap-10 lg:gap-8 md:gap-6 gap-4 items-center lg:px-[18px] md:px-4 px-3 md:py-[18px] py-3 transition-colors duration-300 rounded-full border border-primary hover:bg-white hover:text-primary;
   }
+}
+input:-webkit-autofill {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #000 !important;
 }
 .header-navbar .mobile-nemu {
   transform: translateX(110%);

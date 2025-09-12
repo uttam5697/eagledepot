@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 type SortTabsProps = {
+  text:string;
+  width?: string;
   options?: any[]; // ✅ make it optional to avoid runtime error
   onChange: (value: string) => void;
   defaultValue?: string;

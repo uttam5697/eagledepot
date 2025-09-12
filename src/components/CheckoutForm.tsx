@@ -19,6 +19,10 @@ interface CartItem {
 }
 
 interface CheckoutFormProps {
+  charge: number;
+  message: string;
+  itemTotal: number;
+  tax: number;
   totalAmount: number;
   deliveryType: "Delivery" | "Pickup";
   cartItems: CartItem[];
@@ -33,6 +37,8 @@ interface CheckoutPayload {
   "Userorder[payment_id]": string;
   "Userorder[sub_total]": number;
   "Userorder[total]": number;
+  "Userorder[tax]": number;
+  "Userorder[shipping]": number;
   "Userorder[order_status]": string;
   "Userorder[delivery_type]": "Delivery" | "Pickup";
   "Userorder[user_carts_id]": string;
@@ -40,6 +46,9 @@ interface CheckoutPayload {
 }
 
 export default function CheckoutForm({
+  itemTotal,
+  charge,
+  tax,
   totalAmount,
   cartItems,
   deliveryType,
@@ -48,7 +57,7 @@ export default function CheckoutForm({
 }: CheckoutFormProps) {
   const { refetch } = useCart(true);
   const { data: generaldata } = useFooter(false);
-  
+
   const [thankYouOpen, setThankYouOpen] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -142,7 +151,9 @@ export default function CheckoutForm({
           "Userorder[payment_type]": "Online",
           "Userorder[payment_status]": "succeeded",
           "Userorder[payment_id]": paymentIntent.id,
-          "Userorder[sub_total]": totalAmount,
+          "Userorder[tax]": tax,
+          "Userorder[shipping]": 0,
+          "Userorder[sub_total]": itemTotal,
           "Userorder[total]": totalAmount,
           "Userorder[order_status]": "Confirm",
           "Userorder[delivery_type]": deliveryType, // "Delivery" or "Pickup"
@@ -179,6 +190,7 @@ export default function CheckoutForm({
         <div className="mb-2 font-semibold lg:text-base md:text-2sm text-sm">
           Order Summary:
         </div>
+
         {cartItems?.map((item: any, i) => (
           <div
             className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
@@ -187,6 +199,7 @@ export default function CheckoutForm({
             <span>
               {item?.product.title} × {item.quantity}
             </span>
+
             <span>
               {Number(item.product.price_per_box * item.quantity).toLocaleString("en-US", {
                 minimumFractionDigits: 2,
@@ -194,8 +207,41 @@ export default function CheckoutForm({
                 currency: "USD",
               })}
             </span>
+
+
           </div>
+          
+
         ))}
+
+        <div
+            className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
+          >
+            <span>
+              Estimated taxes
+            </span>
+
+            <span>
+              {tax?.toFixed(2)}
+            </span>
+
+
+          </div>
+          <div
+            className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
+          >
+            <span>
+              Shipping
+            </span>
+
+            <span>
+              {charge?.toFixed(2)}
+            </span>
+
+
+          </div>
+
+
         <div
           style={{
             borderTop: "1px dashed #dadbdd",
@@ -249,8 +295,8 @@ export default function CheckoutForm({
             }}
           />
         </div>
-        <p dangerouslySetInnerHTML={{ __html: generaldata?.pick_up_delivery }}/>
-        <p dangerouslySetInnerHTML={{ __html: generaldata?.agree_delivery}} />
+        <p dangerouslySetInnerHTML={{ __html: generaldata?.pick_up_delivery }} />
+        <p dangerouslySetInnerHTML={{ __html: generaldata?.agree_delivery }} />
         <label className="flex items-center text-sm accent-black my-4">
           <input
             type="checkbox"
@@ -264,9 +310,8 @@ export default function CheckoutForm({
         <button
           type="submit"
           disabled={!agreed || loading} // disable if not agreed or loading
-          className={`gap-3 flex items-center justify-center w-full p-3 text-white lg:text-[18px] md:text-[16px] text-[14px] mb-2 mt-1 font-semibold hover:!bg-transparent hover:!text-primary !border-primary !border !duration-300 !transition-all !rounded-full ${
-            !agreed || loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-          }`}
+          className={`gap-3 flex items-center justify-center w-full p-3 text-white lg:text-[18px] md:text-[16px] text-[14px] mb-2 mt-1 font-semibold hover:!bg-transparent hover:!text-primary !border-primary !border !duration-300 !transition-all !rounded-full ${!agreed || loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+            }`}
           style={{
             background: "#C5A24C",
             boxShadow: "0 2px 8px rgba(110, 80, 255, 0.06)",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { House, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PiTrash } from "react-icons/pi";
@@ -10,15 +10,30 @@ import api from "../../lib/api";
 import { useUser } from "../context/UserContext";
 import { showToast } from "../../utils/toastUtils";
 import CheckoutModal from "./CheckoutModal";
+import { useFooter } from "../../api/home";
 
 export default function MyCart() {
-  const [deliveryType, setDeliveryType] = useState<"Delivery" | "Pickup">("Delivery");
+  const [deliveryType, setDeliveryType] = useState<"Delivery" | "Pickup">("Pickup");
+  const [loadingCharge, setLoadingCharge] = useState(false);
+  const STORE_LOCATION = { lat: 40.3031, lng: -73.9920 };
   const { data: fetchedCartItems = [], refetch, isLoading } = useCart(true);
+  const boxesNum = fetchedCartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
+  const [singleSelectedAddress, setSingleSelectedAddress] = useState<any>();
+  console.log("🚀 ~ MyCart ~ boxesNum:", boxesNum)
+  const { data: generaldata } = useFooter(false);
+  console.log("🚀 ~ MyCart ~ generaldata:", generaldata)
   const [loadingIds, setLoadingIds] = useState<Record<number, boolean>>({});
   console.log("🚀 ~ MyCart ~ loadingIds:", loadingIds)
   const { data: addressAll } = useAddress();
   console.log("🚀 ~ MyCart ~ addressAll:", addressAll)
   const authkey = useUser()?.authKey;
+ 
+  const [miles, setMiles] = useState<string | null>(null);
+  console.log("🚀 ~ MyCart ~ miles:", miles)
+  const [charge, setCharge] = useState<number | null>(null);
+  console.log("🚀 ~ MyCart ~ charge:", charge)
+  const [message, setMessage] = useState<string>("");
+  console.log("🚀 ~ MyCart ~ message:", message)
 
 
   // Local quantity state per cart item
@@ -36,52 +51,52 @@ export default function MyCart() {
   const [selectedId, setSelectedId] = useState<number>(0);
 
   const updateQuantity = async (
-  id: number,
-  productId: number,
-  price: number,
-  quantity: number,
-  action: "increase" | "decrease"
-) => {
-  const currentQty = quantity || 1;
+    id: number,
+    productId: number,
+    price: number,
+    quantity: number,
+    action: "increase" | "decrease"
+  ) => {
+    const currentQty = quantity || 1;
 
-  // If decreasing last quantity → delete instead
-  if (action === "decrease" && currentQty <= 1) {
-    await handleDelete(id);
-    return;
-  }
-
-  const newQuantity = action === "increase" ? currentQty + 1 : currentQty - 1;
-
-  setQuantities((prev) => ({ ...prev, [id]: newQuantity }));
-  setLoadingIds((prev) => ({ ...prev, [id]: true }));
-
-  const formData = new FormData();
-  formData.append("user_carts_id", String(id));
-  formData.append("Usercarts[product_id]", String(productId));
-  formData.append("Usercarts[price]", String(price));
-  formData.append("Usercarts[quantity]", String(newQuantity));
-
-  try {
-    const response = await api.post("/userauth/addeditusercarts", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        auth_key: authkey,
-      },
-    });
-
-    if (response.status === 1) {
-      refetch();
-      showToast("Cart updated successfully", "success");
-    } else {
-      showToast("Failed to update cart", "error");
+    // If decreasing last quantity → delete instead
+    if (action === "decrease" && currentQty <= 1) {
+      await handleDelete(id);
+      return;
     }
-  } catch (error: any) {
-    console.error("Error updating cart:", error);
-    showToast(error?.response?.data?.message || "An error occurred", "error");
-  } finally {
-    setLoadingIds((prev) => ({ ...prev, [id]: false }));
-  }
-};
+
+    const newQuantity = action === "increase" ? currentQty + 1 : currentQty - 1;
+
+    setQuantities((prev) => ({ ...prev, [id]: newQuantity }));
+    setLoadingIds((prev) => ({ ...prev, [id]: true }));
+
+    const formData = new FormData();
+    formData.append("user_carts_id", String(id));
+    formData.append("Usercarts[product_id]", String(productId));
+    formData.append("Usercarts[price]", String(price));
+    formData.append("Usercarts[quantity]", String(newQuantity));
+
+    try {
+      const response = await api.post("/userauth/addeditusercarts", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          auth_key: authkey,
+        },
+      });
+
+      if (response.status === 1) {
+        refetch();
+        showToast("Cart updated successfully", "success");
+      } else {
+        showToast("Failed to update cart", "error");
+      }
+    } catch (error: any) {
+      console.error("Error updating cart:", error);
+      showToast(error?.response?.data?.message || "An error occurred", "error");
+    } finally {
+      setLoadingIds((prev) => ({ ...prev, [id]: false }));
+    }
+  };
 
 
 
@@ -96,8 +111,12 @@ export default function MyCart() {
     return sum + price * qty;
   }, 0);
 
-  const greenPackaging = 0;
-  const totalAmount = itemTotal + greenPackaging;
+  // const greenPackaging = 0;
+  const taxRate = 10 / 100; // 2%
+  const tax = itemTotal * taxRate;
+  const totalAmount = itemTotal + charge + tax;
+
+
 
   const handleDelete = async (id: number) => {
     try {
@@ -128,7 +147,108 @@ export default function MyCart() {
     }
     setIsCheckoutModalOpen(true);
   }
-  if (isLoading) {
+  
+
+
+
+
+  // inside MyCart component
+
+  const selectedAddress = addressAll?.find(
+    (address: any) => address.appuser_address_id === selectedId
+  );
+
+  const fetchRoadDistance = async (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): Promise<number | null> => {
+    try {
+      const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.routes && data.routes.length > 0) {
+        const distanceMeters = data.routes[0].distance;
+        return distanceMeters / 1609.34; // meters → miles
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching road distance", error);
+      return null;
+    }
+  };
+
+  const calculateCharge = async () => {
+  if (!selectedAddress) {
+    setMessage("❌ Please select a valid address.");
+    return;
+  }
+
+  setLoadingCharge(true); // start loader
+
+  try {
+    const distance = await fetchRoadDistance(
+      STORE_LOCATION.lat,
+      STORE_LOCATION.lng,
+      Number(selectedAddress.latitude),
+      Number(selectedAddress.longitude)
+    );
+
+    if (!distance) {
+      setMessage("⚠️ Could not calculate road distance.");
+      return;
+    }
+
+    setMiles(distance.toFixed(2));
+
+    const totalBoxes = fetchedCartItems.reduce(
+      (acc: number, item: any) => acc + item.quantity,
+      0
+    );
+
+    let totalCharge = 0;
+    const pallets = Math.ceil(totalBoxes / 55);
+
+    if (distance < 100) {
+      totalCharge = pallets * 150;
+      setMessage(`Express Delivery (${pallets} pallet${pallets > 1 ? "s" : ""})`);
+    } else if (distance >= 100 && distance <= 200) {
+      totalCharge = pallets * 200;
+      setMessage(`Standard Delivery (${pallets} pallet${pallets > 1 ? "s" : ""})`);
+    } else {
+      setMessage(" We will call you to set up delivery.");
+      totalCharge = 0;
+    }
+
+    setCharge(totalCharge);
+  } catch (err) {
+    console.error("Charge calc error:", err);
+    setMessage("⚠️ Something went wrong.");
+  } finally {
+    setLoadingCharge(false); // stop loader
+  }
+};
+
+  const handleAddressSubmit = () => {
+    calculateCharge();
+    setSingleSelectedAddress(
+      addressAll?.length > 0 &&
+                                addressAll.find(
+                                  (address: any) => address.appuser_address_id === selectedId
+                                )?.address_line_1
+    );
+    setChangeModalOpen(false);
+
+  };
+
+  useEffect(() => {
+      calculateCharge();
+  },[boxesNum])
+  
+
+if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="relative w-12 h-12">
@@ -138,7 +258,6 @@ export default function MyCart() {
       </div>
     );
   }
-
   return (
     <>
 
@@ -264,25 +383,41 @@ export default function MyCart() {
                       ${itemTotal.toFixed(2)}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    {/* <span className="text-black font-light md:text-sm text-xs">
-                      Green packaging charge
-                    </span> */}
-                    {/* <span className="font-semibold">
-                      ${greenPackaging.toFixed(2)}
-                    </span> */}
-                  </div>
-                  {/* <div className="flex justify-between">
+                  {
+                    generaldata?.tax !== null &&
+                    <div className="flex justify-between">
+                      <span className="text-black font-light md:text-sm text-xs">
+                        Estimated taxes
+                      </span>
+                      <span className="font-semibold">
+                        ${tax?.toFixed(2)}
+                      </span>
+                    </div>}
+                  {
+                    charge !== null && deliveryType === "Delivery" &&
+                    <div className="flex justify-between">
                     <span className="text-black font-light md:text-sm text-xs">
-                      Delivery Charges
+                      Shipping
                     </span>
-                    <Link
-                      to="/login"
-                      className="text-primary hover:text-red-700"
-                    >
-                      Log in
-                    </Link>
-                  </div> */}
+                    <span className="font-semibold">
+                      {loadingCharge ? (
+                        <div className="relative w-6 h-6">
+                          <div className="absolute top-0 left-0 w-full h-full rounded-full border-t-2 border-b-2 border-[#C5A24C] animate-spin"></div>
+                        </div>
+                      ) : (
+                        <>${charge?.toFixed(2)}</>
+                      )}
+                    </span>
+                  </div>}
+                  {
+                    charge !== null && deliveryType === "Delivery" &&
+                    <div className="flex justify-between">
+                    <span className="text-black font-light md:text-sm text-xs">
+                      {message}
+                    </span>
+                    <span className="font-semibold">
+                    </span>
+                  </div>}
                 </div>
 
                 {/* Total */}
@@ -331,19 +466,20 @@ export default function MyCart() {
                     {/* Option select */}
                     <div className="flex space-x-4">
                       <button
-                        onClick={() => setDeliveryType("Delivery")}
-                        className={`px-4 py-2 rounded-lg border text-sm font-semibold transition 
-          ${deliveryType === "Delivery" ? "bg-black text-white" : "bg-gray-100 text-black"}`}
-                      >
-                        Delivery
-                      </button>
-                      <button
                         onClick={() => setDeliveryType("Pickup")}
                         className={`px-4 py-2 rounded-lg border text-sm font-semibold transition 
           ${deliveryType === "Pickup" ? "bg-black text-white" : "bg-gray-100 text-black"}`}
                       >
                         Pickup
                       </button>
+                      <button
+                        onClick={() => setDeliveryType("Delivery")}
+                        className={`px-4 py-2 rounded-lg border text-sm font-semibold transition 
+          ${deliveryType === "Delivery" ? "bg-black text-white" : "bg-gray-100 text-black"}`}
+                      >
+                        Delivery
+                      </button>
+                      
                     </div>
 
                     {/* Show info depending on selection */}
@@ -358,10 +494,7 @@ export default function MyCart() {
                               Delivery to
                             </p>
                             <p className="md:text-xs text-[12px] font-light">
-                              {addressAll?.length > 0 &&
-                                addressAll.find(
-                                  (address: any) => address.appuser_address_id === selectedId
-                                )?.address_line_1}
+                              {singleSelectedAddress}
                             </p>
                           </div>
                         </div>
@@ -433,17 +566,19 @@ export default function MyCart() {
         isOpen={isChangeModalOpen}
         onClose={() => setChangeModalOpen(false)}
         // addresses={addresses}
+
         selectedId={selectedId}
         setSelectedId={setSelectedId}
         // handleDelete={(id) => setAddresses(addresses.filter((a) => a.id !== id))}
-        handleSubmit={() => setChangeModalOpen(false)}
+        // handleSubmit={() => setChangeModalOpen(false)}
+        handleSubmit={handleAddressSubmit}
         handleAddNew={() => {
           setAddressModalOpen(true);
           setChangeModalOpen(false);
         }}
         isAddressModalOpen={isAddressModalOpen}
       />
-      <CheckoutModal deliveryType={deliveryType} isOpen={isCheckoutModalOpen} onClose={() => setIsCheckoutModalOpen(false)} cartItems={fetchedCartItems} totalAmount={totalAmount} currentAddress={selectedId} />
+      <CheckoutModal message={message} charge={charge}  tax={tax} itemTotal={itemTotal} deliveryType={deliveryType} isOpen={isCheckoutModalOpen} onClose={() => setIsCheckoutModalOpen(false)} cartItems={fetchedCartItems} totalAmount={totalAmount} currentAddress={selectedId} />
     </>
   );
 }

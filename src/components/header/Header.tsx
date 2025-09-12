@@ -67,6 +67,7 @@ export default function Header() {
               <Link to="/?product" className={`text-white ${pathname === '/?product' ? 'active' : ''}`}>Product</Link>
               <Link to="/about-us" className={`text-white ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>
               <Link to="/contact-us" className={`text-white ${pathname === '/contact-us' ? 'active' : ''}`}>Contact Us</Link>
+              {/* <Link to="/calculate" className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>Calculate</Link> */}
             </nav>
 
             {/* Cart */}
@@ -124,6 +125,9 @@ export default function Header() {
                   <Link to="/contact-us" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/contact-us' ? 'active' : ''}`}>
                     Contact Us
                   </Link>
+                  {/* <Link to="/calculate" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>
+                    Calculate
+                  </Link>/calculate */}
                 </nav>
               </div>
             </div>

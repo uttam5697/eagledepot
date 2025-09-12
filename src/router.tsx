@@ -16,6 +16,7 @@ import { MyCart } from "./components";
 import Callback from "./components/Callback";
 import PaymentForm from "./components/testpayment";
 import RedirectIfLoggedIn from "./components/RedirectIfLoggedIn";
+import DeliveryCalculator from "./components/delcalcu/Calculate";
 
 // Define the routes separately
 const routes = [
@@ -81,6 +82,10 @@ const routes = [
       {
         path: paths.mycart.path,
         element: <MyCart />,
+      },
+      {
+        path: paths.calculate.path,
+        element: <DeliveryCalculator />,
       },
       {
         path: "/callback",

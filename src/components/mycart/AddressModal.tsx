@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { FiArrowUpRight, FiMapPin, FiPhoneCall } from "react-icons/fi";
 import { PiUserLight } from "react-icons/pi";
@@ -12,8 +12,10 @@ interface AddressModalProps {
 }
 
 const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-  const [isSubmitting, setIsSubmitting] = useState(false); // 🔹 for API status
+  const address1Ref = useRef<HTMLInputElement>(null);
+
+  const { refetch } = useAddress();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     recipient: "",
     address1: "",
@@ -23,8 +25,68 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
     isDefault: false,
     city: "",
     state: "",
+    latitude: "",
+    longitude: "",
   });
-  const { refetch } = useAddress();
+
+  // Reset form on modal open/close
+  useEffect(() => {
+    setFormData({
+      recipient: "",
+      address1: "",
+      address2: "",
+      postal: "",
+      mobile: "",
+      isDefault: false,
+      city: "",
+      state: "",
+      latitude: "",
+      longitude: "",
+    });
+  }, [isOpen]);
+
+  // Google Places Autocomplete for Address1
+  useEffect(() => {
+    if (!address1Ref.current || !(window as any).google) return;
+
+    const autocomplete = new (window as any).google.maps.places.Autocomplete(
+      address1Ref.current,
+      { fields: ["address_components", "formatted_address", "geometry"] }
+    );
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      if (!place.address_components) return;
+
+      let postal = "";
+      let city = "";
+      let state = "";
+      let lat = "";
+      let lng = "";
+
+      place.address_components.forEach((comp: any) => {
+        if (comp.types.includes("postal_code")) postal = comp.long_name;
+        if (comp.types.includes("locality")) city = comp.long_name;
+        if (comp.types.includes("administrative_area_level_1")) state = comp.long_name;
+      });
+
+      if (place.geometry?.location) {
+        lat = place.geometry.location.lat().toString();
+        lng = place.geometry.location.lng().toString();
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        address1: place.formatted_address || prev.address1,
+        postal,
+        city,
+        state,
+        latitude: lat,
+        longitude: lng,
+      }));
+    });
+  }, [isOpen]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -36,103 +98,53 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
   const handleAddNewAddress = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const { recipient, address1, postal, mobile, isDefault, address2, city, state } = formData;
 
-    // 🔽 Inline Validations
-    if (!recipient.trim()) {
-      showToast("Please enter recipient name", "error");
-      setIsSubmitting(false);
-      return;
-    }
+    const { recipient, address1, address2, postal, mobile, isDefault, city, state, latitude, longitude } = formData;
 
-
-    if (!address1.trim()) {
-      showToast("Please enter address line 1", "error");
-      setIsSubmitting(false);
-
-      return;
-    }
-    if (!address2.trim()) {
-      showToast("Please enter address line 2", "error");
-      setIsSubmitting(false);
-
-      return;
-    }
-
-    if (!city.trim()) {
-      showToast("Please enter city", "error");
-      setIsSubmitting(false);
-      return;
-    }
-    if (!state.trim()) {
-      showToast("Please enter state", "error");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!postal.trim() || !/^\d{6}$/.test(postal)) {
-      showToast("Please enter a valid 6-digit postal code", "error");
-      setIsSubmitting(false);
-
-      return;
-    }
-
-    if (!mobile.trim() || !/^\d{10}$/.test(mobile)) {
-      showToast("Please enter a valid 10-digit mobile number", "error");
-      setIsSubmitting(false);
-
-      return;
-    }
-
-    if (!isDefault) {
-      showToast("Please agree to the Terms & Conditions", "error");
-      setIsSubmitting(false);
-
-      return;
-    }
+    // Validations
+    if (!recipient.trim()) return showToast("Please enter recipient name", "error"), setIsSubmitting(false);
+    if (!address1.trim()) return showToast("Please enter address line 1", "error"), setIsSubmitting(false);
+    if (!address2.trim()) return showToast("Please enter address line 2", "error"), setIsSubmitting(false);
+    if (!city.trim()) return showToast("Please enter city", "error"), setIsSubmitting(false);
+    if (!state.trim()) return showToast("Please enter state", "error"), setIsSubmitting(false);
+    // if (!postal.trim() || !/^\d{6}$/.test(postal)) return showToast("Please enter valid 6-digit postal code", "error"), setIsSubmitting(false);
+    if (!mobile.trim() || !/^\d{10}$/.test(mobile)) return showToast("Please enter valid 10-digit mobile number", "error"), setIsSubmitting(false);
+    if (!isDefault) return showToast("Please agree to Terms & Conditions", "error"), setIsSubmitting(false);
 
     const authKey = localStorage.getItem("authKey");
-    if (!authKey) {
-      showToast("Auth key missing", "error");
-      setIsSubmitting(false);
-
-      return;
-    }
+    if (!authKey) return showToast("Auth key missing", "error"), setIsSubmitting(false);
 
     const payload = new FormData();
     payload.append("Appuseraddress[name]", recipient);
     payload.append("Appuseraddress[address_line_1]", address1);
-    payload.append("Appuseraddress[address_line_2]", formData.address2);
+    payload.append("Appuseraddress[address_line_2]", address2);
     payload.append("Appuseraddress[postal_code]", postal);
     payload.append("Appuseraddress[mobile_number]", mobile);
     payload.append("Appuseraddress[is_default]", isDefault ? "1" : "0");
-    payload.append("Appuseraddress[city]", formData.city);
-    payload.append("Appuseraddress[state]", formData.state);
+    payload.append("Appuseraddress[city]", city);
+    payload.append("Appuseraddress[state]", state);
+    payload.append("Appuseraddress[latitude]", latitude);
+    payload.append("Appuseraddress[longitude]", longitude);
 
     try {
       const response = await api.post("/userauth/addeditappuseraddress", payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          auth_key: authKey,
-        },
+        headers: { "Content-Type": "multipart/form-data", auth_key: authKey },
       });
 
       if (response?.status === 1) {
-        showToast("Thank you for providing your address. We are currently generating a freight quote for your order. We will reach out to you with the final total, including shipping, for your review. Your credit card will not be charged until you approve the updated quote.", "success");
-        refetch()
+        showToast("Address added successfully. Freight quote will follow.", "success");
+        refetch();
         onClose();
-        setIsSubmitting(false);
-      } else {
-        showToast("Failed to add address", "error");
-        setIsSubmitting(false);
-      }
+      } else showToast("Failed to add address", "error");
     } catch (error: any) {
       console.error("API error:", error);
-      setIsSubmitting(false);
       showToast(error?.response?.data?.message || "Something went wrong", "error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 overflow-auto p-4">
@@ -145,101 +157,59 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
             Add Address
           </h2>
 
-          <form>
+          <form autoComplete="off">
+            {/* Recipient & Address */}
             {[
-              {
-                icon: <PiUserLight />,
-                placeholder: "Recipient's name",
-                name: "recipient",
-              },
-              {
-                icon: <FiMapPin />,
-                placeholder: "Address Line 1",
-                name: "address1",
-              },
-              {
-                icon: <FiMapPin />,
-                placeholder: "Address Line 2",
-                name: "address2",
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center bg-white border border-black/30 rounded-full p-2 w-full mb-3 md:mb-4 lg:mb-5 xl:mb-6"
-              >
+              { icon: <PiUserLight />, placeholder: "Recipient's name", name: "recipient" },
+              { icon: <FiMapPin />,placeholder: "Start typing your address", name: "address1", ref: address1Ref },
+              { icon: <FiMapPin />, placeholder: "Appartment, suite, etc.", name: "address2" },
+            ].map((item, idx) => (
+              <div key={idx} className="flex items-center bg-white border border-black/30 rounded-full p-2 w-full mb-3 md:mb-4 lg:mb-5 xl:mb-6">
                 <div className="flex items-center justify-center flex-none bg-black text-white rounded-full w-[24px] h-[24px] md:w-[32px] md:h-[32px] lg:w-[42px] lg:h-[42px]">
-                  {React.cloneElement(item.icon, {
-                    className: "text-[14px] md:text-[16px] lg:text-[18px]",
-                  })}
+                  {React.cloneElement(item.icon, { className: "text-[14px] md:text-[16px] lg:text-[18px]" })}
                 </div>
                 <input
+                  ref={(item as any).ref}
                   type="text"
                   name={item.name}
                   placeholder={item.placeholder}
                   value={(formData as any)[item.name]}
                   onChange={handleChange}
                   className="w-full bg-transparent ps-3 font-light text-black placeholder:text-black border-none outline-none"
+                  autoComplete="new-address-line1"
                 />
               </div>
             ))}
 
             {/* City & State */}
             <div className="flex flex-col lg:flex-row gap-3 md:gap-4 lg:gap-5 xl:gap-6 mt-4">
-              {[
-                {
-                  icon: <FiMapPin />,
-                  placeholder: "City",
-                  name: "city",
-                },
-                {
-                  icon: <FiMapPin />,
-                  placeholder: "State",
-                  name: "state",
-                },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center bg-white border border-black/30 rounded-full p-2 w-full"
-                >
+              {["city", "state"].map((field) => (
+                <div key={field} className="flex items-center bg-white border border-black/30 rounded-full p-2 w-full">
                   <div className="flex items-center justify-center flex-none bg-black text-white rounded-full w-[24px] h-[24px] md:w-[32px] md:h-[32px] lg:w-[42px] lg:h-[42px]">
-                    {React.cloneElement(item.icon, {
-                      className: "text-[14px] md:text-[16px] lg:text-[18px]",
-                    })}
+                    <FiMapPin className="text-[14px] md:text-[16px] lg:text-[18px]" />
                   </div>
                   <input
                     type="text"
-                    name={item.name}
-                    placeholder={item.placeholder}
-                    value={(formData as any)[item.name]}
+                    name={field}
+                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    value={(formData as any)[field]}
                     onChange={handleChange}
                     className="w-full bg-transparent ps-3 font-light text-black placeholder:text-black border-none outline-none"
+                    autoComplete="new-recipient"
                   />
                 </div>
               ))}
             </div>
 
-            {/* Postal Code & Mobile */}
+            {/* Postal & Mobile */}
             <div className="flex flex-col lg:flex-row gap-3 md:gap-4 lg:gap-5 xl:gap-6 mt-4">
               {[
-                {
-                  icon: <FiMapPin />,
-                  placeholder: "Postal Codes",
-                  name: "postal",
-                },
-                {
-                  icon: <FiPhoneCall />,
-                  placeholder: "Mobile Number",
-                  name: "mobile",
-                },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center bg-white border border-black/30 rounded-full p-2 w-full"
-                >
+                { icon: <FiMapPin />, placeholder: "Postal Code", name: "postal" },
+                { icon: <FiPhoneCall />, placeholder: "Mobile Number", name: "mobile" },
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center bg-white border border-black/30 rounded-full p-2 w-full">
                   <div className="flex items-center justify-center flex-none bg-black text-white rounded-full w-[24px] h-[24px] md:w-[32px] md:h-[32px] lg:w-[42px] lg:h-[42px]">
-                    {React.cloneElement(item.icon, {
-                      className: "text-[14px] md:text-[16px] lg:text-[18px]",
-                    })}
+                    {React.cloneElement(item.icon, { className: "text-[14px] md:text-[16px] lg:text-[18px]" })}
                   </div>
                   <input
                     type="text"
@@ -248,12 +218,13 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
                     value={(formData as any)[item.name]}
                     onChange={handleChange}
                     className="w-full bg-transparent ps-3 font-light text-black placeholder:text-black border-none outline-none"
+                    autoComplete="new-city"
                   />
                 </div>
               ))}
             </div>
 
-            {/* Terms + Submit */}
+            {/* Terms & Submit */}
             <div className="mt-4 md:mt-6 lg:mt-8 xl:mt-10 flex flex-wrap justify-between items-center gap-4">
               <label className="flex items-center text-[12px] md:text-xs accent-black">
                 <input
@@ -270,9 +241,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
                 onClick={handleAddNewAddress}
                 className="black-btn group flex justify-between before:!hidden after:!hidden"
               >
-                <span className="leading-none">
-                  Submit
-                </span>
+                <span className="leading-none">Submit</span>
                 <FiArrowUpRight className="text-2sm group-hover:rotate-45 transition-all duration-300" />
               </button>
             </div>
