@@ -21,7 +21,8 @@ export default {
       center: true,
       padding: {
         DEFAULT: '12px',
-        md: '1.5rem',
+        md: '1rem',
+        lg: '1.5rem',
       }
     },
     extend: {

@@ -55,11 +55,11 @@ export default function WeeklyBestsellers() {
     const { data: generaldata } = useFooter(false);
     return (
         <section
-            className={`xl:mb-[100px] ${
+            className={`xl:mt-[100px] lg:mt-[80px] md:mt-[60px] mt-[40px] ${
                 productDataById?.length && productDataById.length > 0
                 ? 'overflow-hidden'
                 : 'overflow-visible'
-            } lg:mb-[80px] md:mb-[60px] mb-[40px] bg-primary-gradient xl:pt-[60px] lg:pt-[50px] md:pt-[40px] pt-[30px] xl:pb-[75px] lg:pb-[65px] md:pb-[55px] pb-[45px]`}
+            } bg-primary-gradient xl:pt-[60px] lg:pt-[50px] md:pt-[40px] pt-[30px] xl:pb-[75px] lg:pb-[65px] md:pb-[55px] pb-[45px]`}
             >
             <div className="container">
                 <div className="2xl:mb-10 xl:mb-8 lg:mb-6 mb-4 flex justify-between items-center flex-wrap">

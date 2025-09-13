@@ -58,11 +58,11 @@ export default function Header() {
           <div className="flex items-center md:justify-between">
             {/* Logo */}
             <Link to="/" className="space-x-2">
-              <img src={Logo} alt="Eagle Logo" className="" />
+              <img src={Logo} alt="Eagle Logo" className="xl:w-[210px] lg:w-[180px] md:w-[150px] w-[120px]" />
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden navbar md:flex items-center space-x-[50px] mx-auto">
+            <nav className="hidden navbar md:flex items-center xl:space-x-[50px] lg:space-x-[40px] md:space-x-[30px] space-x-[20px] mx-auto">
               <Link to="/" className={`text-white ${pathname === '/' ? 'active' : ''}`}>Home</Link>
               <Link to="/?product" className={`text-white ${pathname === '/?product' ? 'active' : ''}`}>Product</Link>
               <Link to="/about-us" className={`text-white ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>

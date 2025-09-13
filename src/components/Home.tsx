@@ -22,17 +22,15 @@ const Home: React.FC = () => {
       <AnimatedSection direction="up" delay={0.2}>
         <HeroSlider homedatabanner={homescreenData?.banner} />
       </AnimatedSection>
+      <AnimatedSection direction="up" delay={0.3}>
+        {/* Wrap the third section in a ref */}
+        <WeeklyBestsellers />
+      </AnimatedSection>
       <div ref={thirdSectionRef}>
         <AnimatedSection direction="up" delay={0.3}>
           <SpsFlooring productCategory={homescreenData?.product_category} />
         </AnimatedSection>
       </div >
-
-      <AnimatedSection direction="up" delay={0.3}>
-        {/* Wrap the third section in a ref */}
-        <WeeklyBestsellers />
-      </AnimatedSection>
-
       <AnimatedSection direction="up" delay={0.3}>
         <WhatOurClients />
       </AnimatedSection>

@@ -28,7 +28,7 @@ export default function HeroSlider({homedatabanner}:any) {
           >
             {item.type === "Image" && (
               <img
-                className="w-full h-[100vh] object-cover object-center"
+                className="w-full xl:h-[100vh] lg:h-[90vh] md:h-[80vh] h-[70vh] object-cover object-center"
                 src={item?.image}
                 alt="Hero Banner"
               />
