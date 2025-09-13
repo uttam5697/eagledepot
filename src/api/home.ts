@@ -36,7 +36,7 @@ export const useFooter = (skip = false) => {
 };
 export const useShiping = (skip = false) => {
     const query = useQuery({
-        queryKey: ["footer"],
+        queryKey: ["shiping"],
         queryFn: () => getShipingData(),
         refetchOnWindowFocus: false,
         enabled: !skip,

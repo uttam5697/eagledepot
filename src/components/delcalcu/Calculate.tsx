@@ -67,60 +67,7 @@ const DeliveryCalculator: React.FC = () => {
     });
   }, []);
 
-  // ✅ Fetch road distance using Google Distance Matrix
-  // ✅ Fetch road distance using Google Routes API
-  // const fetchRoadDistance = async (
-  //   origin: LatLng,
-  //   destination: LatLng
-  // ): Promise<number | null> => {
-  //   try {
-  //     const apiKey = "AIzaSyDEt8aNIWfxhDUjLRCUXZD-nb4kVHuXhyI"; // ⚡ keep in env variable
-  //     const url = `https://routes.googleapis.com/directions/v2:computeRoutes`;
-
-  //     const body = {
-  //       origin: {
-  //         location: {
-  //           latLng: { latitude: origin.lat, longitude: origin.lng },
-  //         },
-  //       },
-  //       destination: {
-  //         location: {
-  //           latLng: { latitude: destination.lat, longitude: destination.lng },
-  //         },
-  //       },
-  //       travelMode: "DRIVE",
-  //       routingPreference: "TRAFFIC_AWARE",
-  //       computeAlternativeRoutes: false,
-  //       units: "IMPERIAL",
-  //     };
-
-  //     const response = await fetch(url, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "X-Goog-Api-Key": apiKey,
-  //         "X-Goog-FieldMask":
-  //           "routes.distanceMeters,routes.duration,routes.polyline.encodedPolyline",
-  //       },
-  //       body: JSON.stringify(body),
-  //     });
-
-  //     if (!response.ok) {
-  //       console.error("Routes API error", await response.text());
-  //       return null;
-  //     }
-
-  //     const data = await response.json();
-  //     if (!data.routes || data.routes.length === 0) return null;
-
-  //     const distanceMeters = data.routes[0].distanceMeters;
-  //     const distanceMiles = distanceMeters / 1609.34; // meters → miles
-  //     return distanceMiles;
-  //   } catch (error) {
-  //     console.error("Routes API exception", error);
-  //     return null;
-  //   }
-  // };
+  
 
   const fetchRoadDistance = async (
     lat1: number,

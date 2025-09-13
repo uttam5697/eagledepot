@@ -104,7 +104,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
     // Validations
     if (!recipient.trim()) return showToast("Please enter recipient name", "error"), setIsSubmitting(false);
     if (!address1.trim()) return showToast("Please enter address line 1", "error"), setIsSubmitting(false);
-    if (!address2.trim()) return showToast("Please enter address line 2", "error"), setIsSubmitting(false);
+    // if (!address2.trim()) return showToast("Please enter address line 2", "error"), setIsSubmitting(false);
     if (!city.trim()) return showToast("Please enter city", "error"), setIsSubmitting(false);
     if (!state.trim()) return showToast("Please enter state", "error"), setIsSubmitting(false);
     // if (!postal.trim() || !/^\d{6}$/.test(postal)) return showToast("Please enter valid 6-digit postal code", "error"), setIsSubmitting(false);
@@ -143,6 +143,8 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
       setIsSubmitting(false);
     }
   };
+  
+
 
   if (!isOpen) return null;
 
@@ -223,6 +225,8 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
                 </div>
               ))}
             </div>
+
+           
 
             {/* Terms & Submit */}
             <div className="mt-4 md:mt-6 lg:mt-8 xl:mt-10 flex flex-wrap justify-between items-center gap-4">

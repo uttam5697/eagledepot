@@ -10,30 +10,28 @@ import api from "../../lib/api";
 import { useUser } from "../context/UserContext";
 import { showToast } from "../../utils/toastUtils";
 import CheckoutModal from "./CheckoutModal";
-import { useFooter } from "../../api/home";
+import { useFooter, useShiping } from "../../api/home";
 
 export default function MyCart() {
   const [deliveryType, setDeliveryType] = useState<"Delivery" | "Pickup">("Pickup");
   const [loadingCharge, setLoadingCharge] = useState(false);
   const STORE_LOCATION = { lat: 40.3031, lng: -73.9920 };
   const { data: fetchedCartItems = [], refetch, isLoading } = useCart(true);
+
   const boxesNum = fetchedCartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
   const [singleSelectedAddress, setSingleSelectedAddress] = useState<any>();
-  console.log("🚀 ~ MyCart ~ boxesNum:", boxesNum)
   const { data: generaldata } = useFooter(false);
   console.log("🚀 ~ MyCart ~ generaldata:", generaldata)
+  const { data: useShiping1 } = useShiping(false);
   const [loadingIds, setLoadingIds] = useState<Record<number, boolean>>({});
   console.log("🚀 ~ MyCart ~ loadingIds:", loadingIds)
   const { data: addressAll } = useAddress();
-  console.log("🚀 ~ MyCart ~ addressAll:", addressAll)
   const authkey = useUser()?.authKey;
- 
+
   const [miles, setMiles] = useState<string | null>(null);
   console.log("🚀 ~ MyCart ~ miles:", miles)
   const [charge, setCharge] = useState<number | null>(null);
-  console.log("🚀 ~ MyCart ~ charge:", charge)
   const [message, setMessage] = useState<string>("");
-  console.log("🚀 ~ MyCart ~ message:", message)
 
 
   // Local quantity state per cart item
@@ -114,7 +112,8 @@ export default function MyCart() {
   // const greenPackaging = 0;
   const taxRate = 10 / 100; // 2%
   const tax = itemTotal * taxRate;
-  const totalAmount = itemTotal + charge + tax;
+  const shippingCost = deliveryType === "Delivery" ? charge : 0;
+  const totalAmount = itemTotal + shippingCost + tax;
 
 
 
@@ -147,7 +146,6 @@ export default function MyCart() {
     }
     setIsCheckoutModalOpen(true);
   }
-  
 
 
 
@@ -165,90 +163,125 @@ export default function MyCart() {
     lon2: number
   ): Promise<number | null> => {
     try {
-      const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
-      const res = await fetch(url);
-      const data = await res.json();
+      // prevent invalid coords (like 0,0 or NaN)
+      if (
+        !lat1 || !lon1 || !lat2 || !lon2 ||
+        isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)
+      ) {
+        console.warn("⚠️ Invalid coordinates:", { lat1, lon1, lat2, lon2 });
+        return null;
+      }
 
+      const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
+
+      const res = await fetch(url);
+      if (!res.ok) {
+        console.error("OSRM request failed:", res.status, res.statusText);
+        return null;
+      }
+
+      const data = await res.json();
       if (data.routes && data.routes.length > 0) {
         const distanceMeters = data.routes[0].distance;
         return distanceMeters / 1609.34; // meters → miles
       }
+
       return null;
     } catch (error) {
-      console.error("Error fetching road distance", error);
+      console.error("Error fetching road distance:", error);
       return null;
     }
   };
 
+
   const calculateCharge = async () => {
-  if (!selectedAddress) {
-    setMessage("❌ Please select a valid address.");
-    return;
-  }
-
-  setLoadingCharge(true); // start loader
-
-  try {
-    const distance = await fetchRoadDistance(
-      STORE_LOCATION.lat,
-      STORE_LOCATION.lng,
-      Number(selectedAddress.latitude),
-      Number(selectedAddress.longitude)
-    );
-
-    if (!distance) {
-      setMessage("⚠️ Could not calculate road distance.");
+    if (!selectedAddress) {
+      setMessage("❌ Please select a valid address.");
       return;
     }
 
-    setMiles(distance.toFixed(2));
+    setLoadingCharge(true); // start loader
 
-    const totalBoxes = fetchedCartItems.reduce(
-      (acc: number, item: any) => acc + item.quantity,
-      0
-    );
+    try {
+      const distance = await fetchRoadDistance(
+        STORE_LOCATION.lat,
+        STORE_LOCATION.lng,
+        Number(selectedAddress.latitude),
+        Number(selectedAddress.longitude)
+      );
 
-    let totalCharge = 0;
-    const pallets = Math.ceil(totalBoxes / 55);
+      if (!distance) {
+        setMessage("We will call you to set up delivery.");
+        setCharge(null);
+        return;
+      }
 
-    if (distance < 100) {
-      totalCharge = pallets * 150;
-      setMessage(`Express Delivery (${pallets} pallet${pallets > 1 ? "s" : ""})`);
-    } else if (distance >= 100 && distance <= 200) {
-      totalCharge = pallets * 200;
-      setMessage(`Standard Delivery (${pallets} pallet${pallets > 1 ? "s" : ""})`);
-    } else {
-      setMessage(" We will call you to set up delivery.");
-      totalCharge = 0;
+      setMiles(distance.toFixed(2));
+
+      const totalBoxes = fetchedCartItems.reduce(
+        (acc: number, item: any) => acc + item.quantity,
+        0
+      );
+
+      const pallets = Math.ceil(totalBoxes / 55);
+
+      // ✅ Shipping charges config (could also come from API)
+      // const shippingCharges = [
+      //   { shipping_charge_id: 3, min_mile: 200, max_mile: 1000, price: "0.00" },
+      //   { shipping_charge_id: 2, min_mile: 100, max_mile: 200, price: "200.00" },
+      //   { shipping_charge_id: 1, min_mile: 0, max_mile: 100, price: "150.00" },
+      // ];
+
+      // ✅ Find matching rule
+      const matchedCharge = useShiping1.find(
+        (rule: any) => distance >= rule.min_mile && distance <= rule.max_mile
+      );
+
+      let totalCharge = 0;
+
+      if (matchedCharge) {
+        const pricePerPallet = Number(matchedCharge.price);
+
+        if (pricePerPallet > 0) {
+          totalCharge = pallets * pricePerPallet;
+          setMessage(
+            `${pricePerPallet === 150 ? "Express" : "Standard"} Delivery (${pallets} pallet${pallets > 1 ? "s" : ""})`
+          );
+        } else {
+          setMessage("We will call you to set up delivery.");
+        }
+      } else {
+        // distance outside all defined ranges
+        setMessage("We will call you to set up delivery.");
+      }
+
+      setCharge(totalCharge);
+    } catch (err) {
+      console.error("Charge calc error:", err);
+      setMessage("⚠️ Something went wrong.");
+    } finally {
+      setLoadingCharge(false);
     }
-
-    setCharge(totalCharge);
-  } catch (err) {
-    console.error("Charge calc error:", err);
-    setMessage("⚠️ Something went wrong.");
-  } finally {
-    setLoadingCharge(false); // stop loader
-  }
-};
+  };
 
   const handleAddressSubmit = () => {
     calculateCharge();
     setSingleSelectedAddress(
       addressAll?.length > 0 &&
-                                addressAll.find(
-                                  (address: any) => address.appuser_address_id === selectedId
-                                )?.address_line_1
+      addressAll.find(
+        (address: any) => address.appuser_address_id === selectedId
+      )?.address_line_1
     );
     setChangeModalOpen(false);
 
   };
 
   useEffect(() => {
-      calculateCharge();
-  },[boxesNum])
-  
+    calculateCharge();
+  }, [boxesNum])
 
-if (isLoading) {
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="relative w-12 h-12">
@@ -396,28 +429,28 @@ if (isLoading) {
                   {
                     charge !== null && deliveryType === "Delivery" &&
                     <div className="flex justify-between">
-                    <span className="text-black font-light md:text-sm text-xs">
-                      Shipping
-                    </span>
-                    <span className="font-semibold">
-                      {loadingCharge ? (
-                        <div className="relative w-6 h-6">
-                          <div className="absolute top-0 left-0 w-full h-full rounded-full border-t-2 border-b-2 border-[#C5A24C] animate-spin"></div>
-                        </div>
-                      ) : (
-                        <>${charge?.toFixed(2)}</>
-                      )}
-                    </span>
-                  </div>}
+                      <span className="text-black font-light md:text-sm text-xs">
+                        Shipping
+                      </span>
+                      <span className="font-semibold">
+                        {loadingCharge ? (
+                          <div className="relative w-6 h-6">
+                            <div className="absolute top-0 left-0 w-full h-full rounded-full border-t-2 border-b-2 border-[#C5A24C] animate-spin"></div>
+                          </div>
+                        ) : (
+                          <>${charge?.toFixed(2)}</>
+                        )}
+                      </span>
+                    </div>}
                   {
-                    charge !== null && deliveryType === "Delivery" &&
+                     deliveryType === "Delivery" &&
                     <div className="flex justify-between">
-                    <span className="text-black font-light md:text-sm text-xs">
-                      {message}
-                    </span>
-                    <span className="font-semibold">
-                    </span>
-                  </div>}
+                      <span className="text-black font-light md:text-sm text-xs">
+                        {message}
+                      </span>
+                      <span className="font-semibold">
+                      </span>
+                    </div>}
                 </div>
 
                 {/* Total */}
@@ -466,7 +499,7 @@ if (isLoading) {
                     {/* Option select */}
                     <div className="flex space-x-4">
                       <button
-                        onClick={() => setDeliveryType("Pickup")}
+                        onClick={() => {setDeliveryType("Pickup")}}
                         className={`px-4 py-2 rounded-lg border text-sm font-semibold transition 
           ${deliveryType === "Pickup" ? "bg-black text-white" : "bg-gray-100 text-black"}`}
                       >
@@ -479,7 +512,7 @@ if (isLoading) {
                       >
                         Delivery
                       </button>
-                      
+
                     </div>
 
                     {/* Show info depending on selection */}
@@ -506,6 +539,7 @@ if (isLoading) {
                         </button>
                       </div>
                     ) : (
+                      <>
                       <div className="flex items-center space-x-2">
                         <p className="text-black md:text-sm text-xs font-semibold">
                           Pickup selected
@@ -514,6 +548,16 @@ if (isLoading) {
                           You can collect your order directly from our store.
                         </p>
                       </div>
+                      <div className="flex items-center space-x-2">
+                        <p className="text-black md:text-sm text-xs font-semibold">
+                          Store Address
+                        </p>
+                        <p className="md:text-xs text-[12px] font-light">
+                          {generaldata?.warehouse_address}
+                        </p>
+                      </div>
+                      </>
+                      
                     )}
                   </div>
                 </div>
@@ -578,7 +622,7 @@ if (isLoading) {
         }}
         isAddressModalOpen={isAddressModalOpen}
       />
-      <CheckoutModal message={message} charge={charge}  tax={tax} itemTotal={itemTotal} deliveryType={deliveryType} isOpen={isCheckoutModalOpen} onClose={() => setIsCheckoutModalOpen(false)} cartItems={fetchedCartItems} totalAmount={totalAmount} currentAddress={selectedId} />
+      <CheckoutModal message={message} charge={charge} tax={tax} itemTotal={itemTotal} deliveryType={deliveryType} isOpen={isCheckoutModalOpen} onClose={() => setIsCheckoutModalOpen(false)} cartItems={fetchedCartItems} totalAmount={totalAmount} currentAddress={selectedId} />
     </>
   );
 }
