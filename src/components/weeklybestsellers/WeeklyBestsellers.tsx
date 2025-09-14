@@ -64,10 +64,10 @@ export default function WeeklyBestsellers() {
             <div className="container">
                 <div className="2xl:mb-10 xl:mb-8 lg:mb-6 mb-4 flex justify-between items-center flex-wrap">
                     <div>
-                        <h1 className="text-white font-extralight 2xl:text-4.5xl xl:text-4xl lg:text-3xl md:text-2xl text-base xl:leading-none leading-normal">
+                        <h1 className="text-black font-extralight 2xl:text-4.5xl xl:text-4xl lg:text-3xl md:text-2xl text-base xl:leading-none leading-normal">
                             {generaldata?.weekly_bestsellers_title}
                         </h1>
-                        <h1 className="text-white 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay -mt-3">
+                        <h1 className="text-black 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay -mt-3">
                             {generaldata?.weekly_bestsellers_sub_title}
                         </h1>
                     </div>
@@ -76,15 +76,15 @@ export default function WeeklyBestsellers() {
                         <div className="flex lg:gap-5 md:gap-3 gap-2 items-center">
                             <button
                                 ref={prevRef}
-                                className="hover:bg-white border-white group transition-all duration-300 ease-in-out border-[1px] lg:h-[54px] md:h-[44px] h-[34px] w-[34px] lg:w-[54px] md:w-[44px] rounded-full text-white flex items-center justify-center"
+                                className="hover:bg-black border-black group transition-all duration-300 ease-in-out border-[1px] lg:h-[54px] md:h-[44px] h-[34px] w-[34px] lg:w-[54px] md:w-[44px] rounded-full text-black flex items-center justify-center"
                             >
-                                <BsArrowLeft className="text-white group-hover:text-black lg:text-[20px] text-[16px]" />
+                                <BsArrowLeft className="text-black group-hover:text-white lg:text-[20px] text-[16px]" />
                             </button>
                             <button
                                 ref={nextRef}
-                                className="hover:bg-white border-white group transition-all duration-300 ease-in-out border-[1px] lg:h-[54px] md:h-[44px] h-[34px] w-[34px] lg:w-[54px] md:w-[44px] rounded-full text-white flex items-center justify-center"
+                                className="hover:bg-black border-black group transition-all duration-300 ease-in-out border-[1px] lg:h-[54px] md:h-[44px] h-[34px] w-[34px] lg:w-[54px] md:w-[44px] rounded-full text-black flex items-center justify-center"
                             >
-                                <BsArrowRight className="text-white group-hover:text-black lg:text-[20px] text-[16px]" />
+                                <BsArrowRight className="text-black group-hover:text-white lg:text-[20px] text-[16px]" />
                             </button>
                         </div>
                     </div>

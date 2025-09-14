@@ -35,8 +35,8 @@ const SortDropdown: React.FC<SortTabsProps> = ({
       <div className="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth">
         <button
           onClick={() => handleSelect("ALL")}
-          className={`transition-all flex-none duration-300 ease-in-out after:transition-all after:duration-300 after:ease-in-out relative hover:text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] hover:after:w-full after:bg-white
-            ${selected === "ALL" ? " text-white after:w-full" : " text-white/70 after:w-0"}`}
+          className={`transition-all flex-none duration-300 ease-in-out after:transition-all after:duration-300 after:ease-in-out relative hover:text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] hover:after:w-full after:bg-black
+            ${selected === "ALL" ? " text-black after:w-full" : " text-black/70 after:w-0"}`}
         >
           All
         </button>
@@ -46,11 +46,11 @@ const SortDropdown: React.FC<SortTabsProps> = ({
             <button
               key={option.product_category_id}
               onClick={() => handleSelect(option.product_category_id)}
-              className={`transition-all flex-none duration-300 ease-in-out after:transition-all after:duration-300 after:ease-in-out relative hover:text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] hover:after:w-full after:bg-white
+              className={`transition-all flex-none duration-300 ease-in-out after:transition-all after:duration-300 after:ease-in-out relative hover:text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] hover:after:w-full after:bg-black
                 ${
                   selected === option.product_category_id
-                    ? "text-white after:w-full"
-                    : "text-white/70 after:w-0"
+                    ? "text-black after:w-full"
+                    : "text-black/70 after:w-0"
                 }`}
             >
               {option.title}

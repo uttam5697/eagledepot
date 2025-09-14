@@ -48,7 +48,7 @@ export default {
         xl: "0.938rem",
       },
       backgroundImage: {
-        "primary-gradient": "linear-gradient(119.63deg, #C5A24C -28%, #000000 68.13%)",
+        "primary-gradient": "linear-gradient(119.63deg, #67552b -28%, #ffffff 68.13%)",
         "black-gradient": "linear-gradient(180deg, #00000000 43.33%, #000000b3 100%)",
         "black-light-gradient": "linear-gradient(180deg, #0000001a 13.85%, #00000099 100%)",
         "black-dark-light-gradient": "linear-gradient(0deg, #00000000 70.11%, #00000080 100%)",
