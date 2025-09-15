@@ -280,6 +280,19 @@ export default function MyCart() {
     calculateCharge();
   }, [boxesNum])
 
+  useEffect(() => {
+    const body = document.body;
+    if (isAddressModalOpen || isChangeModalOpen) {
+      body.classList.add("overflow-hidden");
+    } else {
+      body.classList.remove("overflow-hidden");
+    }
+
+    // cleanup to avoid leftover class
+    return () => {
+      body.classList.remove("overflow-hidden");
+    };
+  }, [isAddressModalOpen, isChangeModalOpen]);
 
   if (isLoading) {
     return (
@@ -348,7 +361,7 @@ export default function MyCart() {
                             </div>
                           </td>
                           <td className="py-4 ps-4">
-                            <div className="flex items-center rounded-full border bg-white w-fit">
+                            <div className="flex md:mt-[22px] mt-[19px] items-center rounded-full border bg-white w-fit">
                               <div className="flex items-center col-span-1 justify-start p-2">
                                 <button
                                   onClick={() =>
@@ -565,9 +578,9 @@ export default function MyCart() {
                 {/* Process Button */}
                 <button
                   onClick={() => handleCheckout()}
-                  className="flex justify-between black-btn max-w-[286px] mx-auto group before:!hidden after:!hidden xl:px-5 px-4 xl:py-[18px] py-[14px]"
+                  className="flex justify-between black-btn max-w-[286px] mx-auto group before:!hidden after:!hidden xl:px-5 lg:px-4 xl:gap-4 gap-3 px-4 xl:py-[18px] py-[14px]"
                 >
-                  <span className="leading-none">Process to Continue</span>
+                  <span className="leading-none">Process TO Continue</span>
                   <FiArrowUpRight className="text-2sm group-hover:rotate-45 duration-300 transition-all" />
                 </button>
               </div>

@@ -164,7 +164,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
             {[
               { icon: <PiUserLight />, placeholder: "Recipient's name", name: "recipient" },
               { icon: <FiMapPin />,placeholder: "Start typing your address", name: "address1", ref: address1Ref },
-              { icon: <FiMapPin />, placeholder: "Appartment, suite, etc.", name: "address2" },
+              { icon: <FiMapPin />, placeholder: "Apartment, suite, etc.", name: "address2" },
             ].map((item, idx) => (
               <div key={idx} className="flex items-center bg-white border border-black/30 rounded-full p-2 w-full mb-3 md:mb-4 lg:mb-5 xl:mb-6">
                 <div className="flex items-center justify-center flex-none bg-black text-white rounded-full w-[24px] h-[24px] md:w-[32px] md:h-[32px] lg:w-[42px] lg:h-[42px]">
@@ -238,7 +238,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ isOpen, onClose }) => {
                   onChange={handleChange}
                   className="mr-2"
                 />
-                I have read and agree to the Terms & Conditions & Privacy Policy
+                I have read and agree to the Terms & Conditions and Privacy Policy
               </label>
               <button
                 disabled={isSubmitting}

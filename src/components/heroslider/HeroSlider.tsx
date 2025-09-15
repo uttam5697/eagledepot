@@ -10,10 +10,10 @@ export default function HeroSlider({homedatabanner}:any) {
       <Swiper
         speed={600}
         parallax={true}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-        }}
+        // autoplay={{
+        //   delay: 3000,
+        //   disableOnInteraction: false,
+        // }}
         pagination={{
           el: ".custom-pagination", // connect to custom container
           clickable: true,
@@ -28,7 +28,7 @@ export default function HeroSlider({homedatabanner}:any) {
           >
             {item.type === "Image" && (
               <img
-                className="w-full xl:h-[100vh] lg:h-[90vh] md:h-[80vh] h-[70vh] object-cover object-center"
+                className="w-full xl:h-[80vh] lg:h-[75vh] md:h-[70vh] h-[70vh] object-cover object-center"
                 src={item?.image}
                 alt="Hero Banner"
               />
@@ -45,21 +45,19 @@ export default function HeroSlider({homedatabanner}:any) {
                 <source src={item.video} type="video/mp4" />
               </video>
             )}
-            <div className="container absolute left-0 right-0 top-0 z-10">
-              <div className="mt-[191px]">
-                <div className="max-w-[901px]">
-                  <h1
-                    className="text-white -tracking-[0.48px] 2xl:text-5xl xl:text-4.5xl 2xl:leading-[90px] xl:leading-[60px] leading-none lg:text-4xl md:text-3xl text-2xl font-light"
-                    data-swiper-parallax="-1000"
-                  >
-                    {item.title}
-                  </h1>
-                  <div
-                    className="text-white italic -tracking-[0.48px] 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay"
-                    data-swiper-parallax="-1000"
-                  >
-                    {item.subtitle}
-                  </div>
+            <div className="container absolute left-0 right-0 top-1/2 z-10 -translate-y-1/2">
+              <div className="max-w-[901px]">
+                <h1
+                  className="text-white -tracking-[0.48px] 2xl:text-5xl xl:text-4.5xl 2xl:leading-[90px] xl:leading-[60px] leading-none lg:text-4xl md:text-3xl text-2xl font-light"
+                  data-swiper-parallax="-1000"
+                >
+                  {item.title}
+                </h1>
+                <div
+                  className="text-white italic -tracking-[0.48px] 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay"
+                  data-swiper-parallax="-1000"
+                >
+                  {item.subtitle}
                 </div>
               </div>
             </div>

@@ -4,7 +4,6 @@
     font-family: "Gotham";
     src: url(../src/assets//Gotham-Font/GothamNarrow-Medium.otf);
 }
-@import "leaflet/dist/leaflet.css";
 
 
 body {
