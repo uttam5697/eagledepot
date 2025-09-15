@@ -41,6 +41,7 @@ input:-webkit-autofill {
 .navbar a {
   position: relative;
   width: fit-content;
+  font-weight: 500;
 }
 
 .navbar a::before,
@@ -73,7 +74,7 @@ input:-webkit-autofill {
 }
 
 .navbar a.active {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .navbar a.active::before {

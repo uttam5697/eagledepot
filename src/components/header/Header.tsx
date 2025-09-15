@@ -62,11 +62,11 @@ export default function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden navbar md:flex items-center xl:space-x-[50px] lg:space-x-[40px] md:space-x-[30px] space-x-[20px] mx-auto">
-              <Link to="/" className={`text-white ${pathname === '/' ? 'active' : ''}`}>Home</Link>
-              <Link to="/?product" className={`text-white ${pathname === '/?product' ? 'active' : ''}`}>Product</Link>
-              <Link to="/about-us" className={`text-white ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>
-              <Link to="/contact-us" className={`text-white ${pathname === '/contact-us' ? 'active' : ''}`}>Contact Us</Link>
+            <nav className="hidden navbar md:flex items-center xl:space-x-[50px] lg:space-x-[30px] md:space-x-[20px] space-x-[20px] mx-auto">
+              <Link to="/" className={`text-white text-[18px] ${pathname === '/' ? 'active' : ''}`}>Home</Link>
+              <Link to="/?product" className={`text-white text-[18px] ${pathname === '/?product' ? 'active' : ''}`}>Product</Link>
+              <Link to="/about-us" className={`text-white text-[18px] ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>
+              <Link to="/contact-us" className={`text-white text-[18px] ${pathname === '/contact-us' ? 'active' : ''}`}>Contact Us</Link>
               {/* <Link to="/calculate" className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>Calculate</Link> */}
             </nav>
 
@@ -74,7 +74,7 @@ export default function Header() {
               <div className='md:ml-0 ml-auto' ref={cartRef}>
                 <button
                   onClick={() => setIsCartOpen(!isCartOpen)}
-                  className="flex lg:w-[54px] relative md:w-[44px] w-[34px] lg:h-[54px] md:h-[44px] h-[34px] white-btn group p-0 justify-center border-white/30 lg:gap-6 md:gap-5 gap-4 bg-white-light-gradient bg-transparent hover:bg-white hover:text-black text-white mr-4 md:ml-0 ml-auto"
+                  className="flex lg:w-[54px] relative md:w-[44px] w-[34px] lg:h-[54px] md:h-[44px] h-[34px] white-btn group p-0 justify-center border-white/30 lg:gap-6 md:gap-5 gap-4 bg-white-light-gradient bg-transparent hover:bg-white hover:text-black text-white lg:mr-4 mr-3 md:ml-0 ml-auto"
                   >
                   <PiShoppingCartLight className="lg:text-[22px] md:text-[20px] text-[18px]" />
                   {fetchedCartItems.length > 0 &&
