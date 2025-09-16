@@ -55,7 +55,7 @@ export default function WeeklyBestsellers() {
     const { data: generaldata } = useFooter(false);
     return (
         <section
-            className={`xl:mt-[100px] lg:mt-[80px] md:mt-[60px] mt-[40px] ${
+            className={` ${
                 productDataById?.length && productDataById.length > 0
                 ? 'overflow-hidden'
                 : 'overflow-visible'
