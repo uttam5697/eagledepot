@@ -24,13 +24,32 @@ const QuantityInputGroup: React.FC<Props> = ({
   const LeftIcon = iconType === "arrow" ? FiChevronLeft : FiMinus;
   const RightIcon = iconType === "arrow" ? FiChevronRight : FiPlus;
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseFloat(e.target.value);
-    console.log("🚀 ~ handleInputChange ~ newValue:", newValue)
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    console.log("🟡 Raw input:", value);
+
+    if (value === "") {
+      console.log("🔴 Empty input → setting 0");
+      onChange(0);
+      return;
+    }
+
+    // ✅ Remove leading zeros (but keep one before decimal)
+    value = value.replace(/^0+(?=\d)/, "");
+    console.log("🟢 Cleaned value (no leading zeros):", value);
+
+    const newValue = Number(value);
+    console.log("🔵 Parsed number:", newValue);
+
     if (!isNaN(newValue)) {
-      onChange(Number(newValue));
+      console.log("✅ Valid number → updating state:", newValue);
+      onChange(newValue); // update parent state
+    } else {
+      console.log("⚠️ NaN detected → fallback to 0");
+      onChange(0);
     }
   };
+
 
   return (
     <div className="flex flex-col items-start gap-1 w-full">
@@ -52,9 +71,14 @@ const QuantityInputGroup: React.FC<Props> = ({
         <div className="col-span-3 flex justify-center items-center ">
           <input
             type="number"
-            step="0.01"
-            value={value}
+            step="any"
+            value={value === 0 ? "" : value}   // show blank if empty, otherwise number
             onChange={handleInputChange}
+            onBlur={() => {
+              if (value === 0 || isNaN(value as number)) {
+                onChange(0); // fallback when leaving field
+              }
+            }}
             className="w-full text-center font-semibold text-black text-[12px] lg:text-sm sm:text-base outline-none bg-transparent px-2"
           />
           {unit && <span className="text-xs font-light ms-1">({unit})</span>}
