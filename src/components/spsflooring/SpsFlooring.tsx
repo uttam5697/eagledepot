@@ -71,8 +71,7 @@ export default function SpsFlooring({ productCategory }: any) {
                       src={item.image}
                       alt="FlooringImg"
                     />
-                    <div className="absolute z-20 bottom-0 w-full p-[10px] -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 h-fit">
-                      <div className=" backdrop-blur-[10px] rounded-2xl px-8 py-3">
+                    <div className="absolute backdrop-blur-[10px] rounded-2xl px-8 py-3 z-20 bottom-0 w-full p-[10px] -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 h-fit">
                         <h2 className="font-playfairDisplay text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none group-hover:hidden">
                           {item.title}
                         </h2>
@@ -103,7 +102,6 @@ export default function SpsFlooring({ productCategory }: any) {
                             </a>
                           </div>
                         </div>
-                      </div>
                     </div>
                   </div>
                 </div>
