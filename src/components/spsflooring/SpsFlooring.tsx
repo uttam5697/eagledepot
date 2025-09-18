@@ -76,8 +76,8 @@ export default function SpsFlooring({ productCategory }: any) {
                         <h2 className="font-playfairDisplay text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none group-hover:hidden">
                           {item.title}
                         </h2>
-                        <div className="absolute transition-transform duration-500 translate-y-full group-hover:translate-y-0 group-hover:relative">
-                          <h2 className="font-playfairDisplay text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none">
+                        <div className="absolute transition-transform duration-500 translate-y-[200%] group-hover:translate-y-0 group-hover:relative">
+                          <h2 className="font-playfairDisplay mb-4 text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none">
                             {item.title}
                           </h2>
                           <p
