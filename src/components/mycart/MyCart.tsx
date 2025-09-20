@@ -21,7 +21,6 @@ export default function MyCart() {
   const boxesNum = fetchedCartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
   const [singleSelectedAddress, setSingleSelectedAddress] = useState<any>();
   const { data: generaldata } = useFooter(false);
-  console.log("🚀 ~ MyCart ~ generaldata:", generaldata)
   const { data: useShiping1 } = useShiping(false);
   const [loadingIds, setLoadingIds] = useState<Record<number, boolean>>({});
   console.log("🚀 ~ MyCart ~ loadingIds:", loadingIds)
@@ -110,7 +109,7 @@ export default function MyCart() {
   }, 0);
 
   // const greenPackaging = 0;
-  const taxRate = 10 / 100; // 2%
+  const taxRate = generaldata?.tax / 100; // 2%
   const tax = itemTotal * taxRate;
   const shippingCost = deliveryType === "Delivery" ? charge : 0;
   const totalAmount = itemTotal + shippingCost + tax;

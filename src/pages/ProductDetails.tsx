@@ -14,6 +14,7 @@ import { showToast } from '../utils/toastUtils';
 import { useUser } from '../components/context/UserContext';
 import { paths } from '../config/path';
 import { useCart } from '../api/cart';
+import RelatedProduct from '../components/relatedProduct/RelatedProduct';
 
 export default function ProductDetailPage() {
     const { slug } = useParams();
@@ -107,6 +108,7 @@ export default function ProductDetailPage() {
     const category = productCategoryData?.find((item: any) => item.product_category_id
         === productDataById?.product_category_id);
 
+   
 
     const breadcrumbData = [
         { label: 'Home', href: '/' },
@@ -496,6 +498,13 @@ export default function ProductDetailPage() {
             </div>
             {productDataById?.product_specifications.length > 0 &&
                 <ProductSpecifications product_specifications={productDataById?.product_specifications} />}
+
+            {
+                <RelatedProduct
+                    categoryId={productDataById?.product_category_id}
+                    excludeProductId={productDataById?.product_id}
+                />
+            }
         </div>
     );
 }
