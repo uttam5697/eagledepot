@@ -84,7 +84,7 @@ export default function ContactUs() {
               onSubmit={handleSubmit}
               className="max-w-[600px] w-full mx-auto bg-[#fdfcfb] rounded-md xl:space-y-6 lg:space-y-5 md:space-y-4 space-y-3"
             >
-              <h2 className="italic text-primary 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay xl:mb-10 lg:mb-8 md:mb-6 mb-4">
+              <h2 className="italic text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay xl:mb-10 lg:mb-8 md:mb-6 mb-4">
                 Contact Us
               </h2>
               <div className="flex lg:flex-row flex-col xl:gap-6 lg:gap-5 md:gap-4 gap-3">

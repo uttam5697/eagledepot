@@ -19,7 +19,7 @@ export default function AboutUs() {
                     {aboutdata?.banner_title}
                   </h1>
                   <div
-                    className="text-white italic -tracking-[0.48px] 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay"
+                    className="text-white italic -tracking-[0.48px] 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay"
                     data-swiper-parallax="-1000"
                   >
                     {aboutdata?.banner_sub_title}
@@ -35,8 +35,8 @@ export default function AboutUs() {
       <section className="xl:mb-[100px] lg:mb-[80px] md:mb-[60px] mb-[40px]">
         <div className="container">
             <div className="xl:mb-[50px] lg:mb-[40px] md:mb-[30px] mb-[20px]">
-                <h1 className="font-extralight 2xl:text-4.5xl xl:text-4xl lg:text-3xl md:text-2xl text-base xl:leading-none leading-normal">{aboutdata?.title}</h1>
-                <h1 className="text-primary 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay -mt-3">{aboutdata?.sub_title}</h1>
+                <h1 className="font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">{aboutdata?.title}</h1>
+                <h1 className="text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">{aboutdata?.sub_title}</h1>
             </div>
             <div className="flex flex-col gap-4">
                 <div dangerouslySetInnerHTML={{ __html: aboutdata?.description }} />

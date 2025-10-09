@@ -348,7 +348,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="  text-black">
                     {/* Title */}
-                    <h1 className="2xl:text-4.5xl xl:text-4xl lg:text-3xl md:text-2xl text-base leading-none font-playfairDisplay italic mb-2">
+                    <h1 className="2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] leading-none font-playfairDisplay italic mb-2">
                         {productDataById?.title}
                     </h1>
                     <div className=' my-4'>

@@ -52,7 +52,7 @@ const ProductList: React.FC<CategoryListProps> = ({ categoryId }) => {
             <section className='xl:mb-[140px] lg:mb-[120px] md:mb-[100px] mb-[80px] xl:mt-[160px] lg:mt-[140px] md:mt-[100px] mt-[80px]'>
                 <div className="container">
                     <div className="flex items-center gap-2 md:flex-nowrap flex-wrap justify-between 2xl:mb-[60px] xl:mb-[50px] lg:mb-[40px] md:mb-[30px] mb-[20px]">
-                        <h1 className="text-primary flex-none italic 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay">
+                        <h1 className="text-primary flex-none italic 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay">
                             {
                                 productCategoryData?.find(
                                     (category: any) => category.product_category_id === Number(categoryId)

@@ -54,7 +54,7 @@ export default function HeroSlider({homedatabanner}:any) {
                   {item.title}
                 </h1>
                 <div
-                  className="text-white italic -tracking-[0.48px] 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay"
+                  className="text-white italic -tracking-[0.48px] 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay"
                   data-swiper-parallax="-1000"
                 >
                   {item.subtitle}

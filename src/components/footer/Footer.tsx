@@ -28,7 +28,7 @@ export default function Footer() {
           </div>
           <div className="xl:col-start-8 lg:col-start-8 md:col-start-8 sm:col-start-10 col-start-1 col-end-13 grid grid-cols-3">
             <div>
-              <h3 className="lg:mb-[34px] md:mb-[24px] mb-[14px] leading-none 2xl:text-3xl xl:text-2xl lg:text-2xl md:text-xl text-base text-white font-playfairDisplay italic ">
+              <h3 className="lg:mb-[34px] md:mb-[24px] mb-[14px] leading-none xl:text-[24px] lg:text-[22px] md:text-[20px] text-[18px] text-white font-playfairDisplay italic ">
                 Link
               </h3>
               <ul className="space-y-2 navbar">
@@ -59,7 +59,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="lg:mb-[34px] md:mb-[24px] mb-[14px] leading-none 2xl:text-3xl xl:text-2xl lg:text-2xl md:text-xl text-base text-white font-playfairDisplay italic ">
+              <h3 className="lg:mb-[34px] md:mb-[24px] mb-[14px] leading-none xl:text-[24px] lg:text-[22px] md:text-[20px] text-[18px] text-white font-playfairDisplay italic ">
                 Social
               </h3>
               <ul className="space-y-2 navbar">
@@ -110,7 +110,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="lg:mb-[34px] md:mb-[24px] mb-[14px] leading-none 2xl:text-3xl xl:text-2xl lg:text-2xl md:text-xl text-base text-white font-playfairDisplay italic ">
+              <h3 className="lg:mb-[34px] md:mb-[24px] mb-[14px] leading-none xl:text-[24px] lg:text-[22px] md:text-[20px] text-[18px] text-white font-playfairDisplay italic ">
                 Documents
               </h3>
               <ul className="space-y-2 navbar">

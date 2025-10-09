@@ -310,7 +310,7 @@ export default function MyCart() {
         {/* Main Content */}
         <div className="container py-8">
           <div className="flex items-center justify-between xl:mb-14 lg:mb-10 md:mb-8 mb-3">
-            <h1 className="italic 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay">
+            <h1 className="italic 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay">
               My Cart
             </h1>
             {/* Continue Shopping Link */}
