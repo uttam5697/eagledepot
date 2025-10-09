@@ -24,10 +24,10 @@ export default function ProductSpecifications({ product_specifications }: Props)
       <div className="container">
         <div className="bg-white rounded-[24px] xl:p-[30px] lg:p-6 md:p-5 p-4">
           <div className="2xl:mb-[60px] xl:mb-[50px] lg:mb-[40px] md:mb-[30px] mb-[20px]">
-            <h2 className="font-extralight 2xl:text-4.5xl xl:text-4xl lg:text-3xl md:text-2xl text-base xl:leading-none leading-normal">
+            <h2 className="font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
               Product
             </h2>
-            <h2 className="text-primary 2xl:text-5xl xl:text-4.5xl lg:text-4xl md:text-3xl text-2xl xl:leading-none leading-normal font-playfairDisplay -mt-3">
+            <h2 className="text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
               Specifications
             </h2>
           </div>
