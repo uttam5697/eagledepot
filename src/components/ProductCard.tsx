@@ -9,10 +9,12 @@ type ProductCardProps = {
   id: number;
   slug: any
   price_per_box: number
+//   price_per_piece: number
   price: number
+  type: string
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title ,slug,price}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title ,slug,price  ,type}) => {
     // const [liked, setLiked] = useState(false);
     const navigate = useNavigate();
 
@@ -46,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title ,slug,price})
                     )} */}
                     {price && (
                         <p className="xl:text-xl lg:text-base md:text-2sm text-sm font-bold text-black leading-none">
-                            ${price} / sqft
+                            ${price} / {type === "Box" ? "sqft" : "each"}
                         </p>
                     )}
                     <button onClick={() => navigate(`/products/${slug}`)} className="mx-auto mt-4 lg:py-[11px] md:py-[8px] py-[6px] lg:px-8 md:px-6 px-4 black-btn group before:!hidden after:!hidden">

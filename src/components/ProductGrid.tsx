@@ -1,51 +1,67 @@
-import React, { useEffect } from 'react';
-import ProductCard from './ProductCard';
-// import SortDropdown from './ui/SortDropdown';
-import AnimatedSection from './ui/AnimatedSection';
-import { useQuery, type QueryFunctionContext } from "@tanstack/react-query";
-import api from '../lib/api';
-import ProductSkeleton from './ui/ProductSkeleton';
+import React, { useEffect, useState } from "react";
+import ProductCard from "./ProductCard";
+import AnimatedSection from "./ui/AnimatedSection";
+import { useQuery } from "@tanstack/react-query";
+import api from "../lib/api";
+import ProductSkeleton from "./ui/ProductSkeleton";
 
-// const sortOptions = [
-//     { label: 'Popularity', value: 'popularity' },
-//     { label: 'Price: Low to High', value: 'low-high' },
-//     { label: 'Price: High to Low', value: 'high-low' },
-//     { label: 'Newest', value: 'newest' },
-// ];
 type CategoryListProps = {
-    categoryId?: string | undefined;
+    categoryId?: string;
+    excludeProductId?: string; // 👈 pass current productId from details page
 };
-const ProductList: React.FC<CategoryListProps> = ({ categoryId }) => {
 
+const PRODUCTS_PER_PAGE = 8;
 
-    const fetchProductById = async (categoryId: string) => {
+const ProductList: React.FC<CategoryListProps> = ({ categoryId, excludeProductId }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [allProducts, setAllProducts] = useState<any[]>([]);
+    console.log("🚀 ~ ProductList ~ allProducts:", allProducts)
+    const [isNextPage, setIsNextPage] = useState(true);
+
+    // Fetch just the current page of products; never update outside state in queryFn!
+    const fetchProductPage = async (page: number) => {
         const formData = new FormData();
-        formData.append('product_category_id', categoryId);
-        const { data } = await api.post(`/beforeauth/getproduct`, categoryId === 'ALL' ? {} : formData);
-        return data;
+        formData.append("product_category_id", categoryId || "");
+        formData.append("page", String(page));
+        formData.append("pagesize", String(PRODUCTS_PER_PAGE));
+        const res = await api.post(`/beforeauth/getproduct`, formData);
+        // All pagination meta inside res.data.* fields
+        return res;
     };
 
-    const { data: productDataById, isLoading, refetch } = useQuery({
-        queryKey: ["product", categoryId],
-        queryFn: () => fetchProductById(categoryId!),
-        enabled: false,
-    });
-
-    const getProductCategory = async (
-        _ctx: QueryFunctionContext<[string]>
-    ) => {
-        const { data } = await api.post('/beforeauth/getproductcategory');
-        return data;
-    };
-
-    const { data: productCategoryData } = useQuery({
-        queryKey: ['productCategory'],
-        queryFn: getProductCategory,
+    // Query for current page
+    const { data, isLoading, isFetching } = useQuery({
+        queryKey: ["product", categoryId, currentPage],
+        queryFn: () => fetchProductPage(currentPage),
+        enabled: !!categoryId,
         refetchOnWindowFocus: false,
-    });
+        // keepPreviousData: true,
+    }) as any;
+
+    // Reset on categoryId change
     useEffect(() => {
-        refetch();
-    }, []);
+        setAllProducts([]);
+        setCurrentPage(1);
+    }, [categoryId]);
+
+    // Merge new page into products on successful fetch
+    useEffect(() => {
+        if (data && Array.isArray(data.data)) {
+            setAllProducts((prev) =>
+                currentPage === 1 ? data.data : [...prev, ...data.data]
+            );
+            setIsNextPage(data.is_next_page === "Y");
+        }
+    }, [data, currentPage]);
+
+    const handleLoadMore = () => {
+        if (isNextPage && !isFetching) {
+            setCurrentPage((prev) => prev + 1);
+        }
+    };
+
+    const  filteredProducts = allProducts.filter((product: any) => product.product_id !== excludeProductId); 
+    console.log("🚀 ~ ProductList ~ filteredProducts:", filteredProducts)
 
     return (
         <AnimatedSection direction="up" delay={0.2}>
@@ -53,8 +69,9 @@ const ProductList: React.FC<CategoryListProps> = ({ categoryId }) => {
                 <div className="container">
                     <div className="flex items-center gap-2 md:flex-nowrap flex-wrap justify-between 2xl:mb-[60px] xl:mb-[50px] lg:mb-[40px] md:mb-[30px] mb-[20px]">
                         <h1 className="text-primary flex-none italic 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay">
+
                             {
-                                productCategoryData?.find(
+                                filteredProducts?.find(
                                     (category: any) => category.product_category_id === Number(categoryId)
                                 )?.title
                             }
@@ -66,13 +83,14 @@ const ProductList: React.FC<CategoryListProps> = ({ categoryId }) => {
                             <SortDropdown text="Sort by" width="max-w-[300px]" sortbytext={true} options={sortOptions} onChange={handleSortChange} />
                         </div> */}
                     </div>
-
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6 lg:gap-5 md:gap-4 gap-3">
-                        {isLoading
-                            ? Array.from({ length: 8 }).map((_, index) => (
+                        {/* First load - show skeletons */}
+                        {isLoading && currentPage === 1 ? (
+                            Array.from({ length: 8 }).map((_, index) => (
                                 <ProductSkeleton key={index} />
                             ))
-                            : productDataById?.map((product: any) => (
+                        ) : (
+                            filteredProducts?.map((product: any) => (
                                 <ProductCard
                                     key={product.product_id}
                                     id={product.product_id}
@@ -81,9 +99,26 @@ const ProductList: React.FC<CategoryListProps> = ({ categoryId }) => {
                                     imageUrl={product.image}
                                     slug={product?.slug}
                                     price_per_box={product.price_per_box}
+                                    // price_per_piece={product.price_per_piece}
+                                    type={product.type}
                                 />
-                            ))}
+                            ))
+                        )}
                     </div>
+                    {isNextPage && (
+                        <div className="flex justify-center mt-6">
+                            <button
+                                className="px-6 py-2 bg-primary text-white rounded hover:bg-primary-dark transition disabled:opacity-50"
+                                onClick={handleLoadMore}
+                                disabled={isFetching}
+                            >
+                                {isFetching ? <span className="flex items-center gap-2">
+                                    <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                    Loading...
+                                </span> : "View More"}
+                            </button>
+                        </div>
+                    )}
                 </div>
             </section>
         </AnimatedSection>

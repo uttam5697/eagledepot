@@ -63,7 +63,6 @@ export default function SignUp() {
       payload.append("Appuser[app_version]", "1");
 
       const res = await api.post("/beforeauth/usersignup", payload) as any;
-      console.log("🚀 ~ handleSubmit ~ res:", res?.data?.auth_key)
       if (res.status === 1) {
         localStorage.setItem("authKey", res?.data?.auth_key);
         login({

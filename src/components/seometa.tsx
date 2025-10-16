@@ -4,15 +4,9 @@ import { useFooter } from "../api/home";
 import { useEffect } from "react";
 
 const SeoMeta = () => {
-  const { data: generaldata, isLoading, error } = useFooter(false);
+  const { data: generaldata } = useFooter(false);
 
-  // Debug logging
-  console.log("SeoMeta - generaldata:", generaldata);
-  console.log("SeoMeta - isLoading:", isLoading);
-  console.log("SeoMeta - error:", error);
-  console.log("SeoMeta - meta_title:", generaldata?.meta_title);
-  console.log("SeoMeta - meta_description:", generaldata?.meta_description);
-  console.log("SeoMeta - meta_tag:", generaldata?.meta_tag);
+
 
   // Use API data with fallbacks
   const title = generaldata?.meta_title || "Eagle Flooring Depot – SPC and LVT flooring for less";
@@ -47,17 +41,10 @@ const SeoMeta = () => {
         document.head.appendChild(metaKeywords);
       }
 
-      console.log("Direct meta tags updated:");
-      console.log("- Title:", document.title);
-      console.log("- Description:", description);
-      console.log("- Keywords:", keywords);
       
-      // Verify meta tags were actually set
-      const verifyDescription = document.querySelector('meta[name="description"]');
-      const verifyKeywords = document.querySelector('meta[name="keywords"]');
-      console.log("Verification:");
-      console.log("- Meta description found:", verifyDescription?.getAttribute('content'));
-      console.log("- Meta keywords found:", verifyKeywords?.getAttribute('content'));
+      
+      
+      
     }
   }, [title, description, keywords]);
 

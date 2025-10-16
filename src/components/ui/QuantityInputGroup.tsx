@@ -25,26 +25,20 @@ const QuantityInputGroup: React.FC<Props> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
-    console.log("🟡 Raw input:", value);
 
     if (value === "") {
-      console.log("🔴 Empty input → setting 0");
       onChange(0);
       return;
     }
 
     // ✅ Remove leading zeros (but keep one before decimal)
     value = value.replace(/^0+(?=\d)/, "");
-    console.log("🟢 Cleaned value (no leading zeros):", value);
 
     const newValue = Number(value);
-    console.log("🔵 Parsed number:", newValue);
 
     if (!isNaN(newValue)) {
-      console.log("✅ Valid number → updating state:", newValue);
       onChange(newValue); // update parent state
     } else {
-      console.log("⚠️ NaN detected → fallback to 0");
       onChange(0);
     }
   };

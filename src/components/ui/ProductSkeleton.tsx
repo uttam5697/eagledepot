@@ -5,7 +5,7 @@ const ProductSkeleton: React.FC = () => {
         <div className="animate-pulse rounded-[24px] bg-white md:p-2 p-1 shadow-sm">
             {/* Image Skeleton */}
             <div className="relative overflow-hidden rounded-[16px]">
-                <div className="w-full h-[200px] max-w-[356px] max-h-[350px] bg-gray-200 rounded-[16px]"></div>
+                <div className="w-full h-[200px] max-w-[556px] max-h-[350px] bg-gray-200 rounded-[16px]"></div>
             </div>
 
             {/* Title Skeleton */}

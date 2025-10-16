@@ -9,7 +9,7 @@ import AuthDropdown from './components/AuthDropdown';
 import { useCart } from '../../api/cart';
 
 export default function Header() {
-  const { data: fetchedCartItems = [] , refetch } = useCart(true);
+  const { data: fetchedCartItems = [], refetch } = useCart(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const pathname = useLocation().pathname;
@@ -38,7 +38,7 @@ export default function Header() {
   }, [isMenuOpen, isCartOpen]);
 
   useEffect(() => {
-    console.log('Cart items:', fetchedCartItems); 
+    console.log('Cart items:', fetchedCartItems);
     refetch();
   }, []);
 
@@ -67,23 +67,24 @@ export default function Header() {
               <Link to="/?product" className={`text-white text-[18px] ${pathname === '/?product' ? 'active' : ''}`}>Product</Link>
               <Link to="/about-us" className={`text-white text-[18px] ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>
               <Link to="/contact-us" className={`text-white text-[18px] ${pathname === '/contact-us' ? 'active' : ''}`}>Contact Us</Link>
+              <Link to="/installation" className={`text-white ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
               {/* <Link to="/calculate" className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>Calculate</Link> */}
             </nav>
 
             {/* Cart */}
-              <div className='md:ml-0 ml-auto' ref={cartRef}>
-                <button
-                  onClick={() => setIsCartOpen(!isCartOpen)}
-                  className="flex lg:w-[54px] relative md:w-[44px] w-[34px] lg:h-[54px] md:h-[44px] h-[34px] white-btn group p-0 justify-center border-white/30 lg:gap-6 md:gap-5 gap-4 bg-white-light-gradient bg-transparent hover:bg-white hover:text-black text-white lg:mr-4 mr-3 md:ml-0 ml-auto"
-                  >
-                  <PiShoppingCartLight className="lg:text-[22px] md:text-[20px] text-[18px]" />
-                  {fetchedCartItems.length > 0 &&
+            <div className='md:ml-0 ml-auto' ref={cartRef}>
+              <button
+                onClick={() => setIsCartOpen(!isCartOpen)}
+                className="flex lg:w-[54px] relative md:w-[44px] w-[34px] lg:h-[54px] md:h-[44px] h-[34px] white-btn group p-0 justify-center border-white/30 lg:gap-6 md:gap-5 gap-4 bg-white-light-gradient bg-transparent hover:bg-white hover:text-black text-white lg:mr-4 mr-3 md:ml-0 ml-auto"
+              >
+                <PiShoppingCartLight className="lg:text-[22px] md:text-[20px] text-[18px]" />
+                {fetchedCartItems.length > 0 &&
                   <span className="absolute top-0 end-0 inline-flex items-center py-0.5 px-1.5 rounded-full md:text-[11px] text-[9px] font-medium transform -translate-y-1/2 translate-x-1/2 bg-primary text-white">{
                     fetchedCartItems?.length
                   }</span>
-                  }
-                </button>
-              </div>
+                }
+              </button>
+            </div>
 
             {/* Auth */}
             <AuthDropdown />
@@ -125,6 +126,7 @@ export default function Header() {
                   <Link to="/contact-us" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/contact-us' ? 'active' : ''}`}>
                     Contact Us
                   </Link>
+                  <Link to="/installation" className={`text-white ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
                   {/* <Link to="/calculate" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>
                     Calculate
                   </Link>/calculate */}

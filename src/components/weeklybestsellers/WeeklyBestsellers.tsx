@@ -19,6 +19,7 @@ export default function WeeklyBestsellers() {
     const fetchProductById = async (category: string) => {
         const formData = new FormData();
         formData.append('product_category_id', category);
+        formData.append("pagesize", String(100));
         const { data } = await api.post(`/beforeauth/getproduct`, category === 'ALL' ? {} : formData);
         return data
     };
@@ -150,6 +151,7 @@ export default function WeeklyBestsellers() {
                                             slug={product.slug}
                                             price_per_box={product.price_per_box}
                                             price={product.price}
+                                            type={product.type}
                                         />
                                     </SwiperSlide>
                                 ))

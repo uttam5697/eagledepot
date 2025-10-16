@@ -23,6 +23,7 @@ export default function ProductDetailPage() {
         queryFn: () => fetchProductById(slug as string),
         enabled: false,
     });
+    console.log("🚀 ~ ProductDetailPage ~ productDataById:", productDataById?.type)
     const { data: cartdata, refetch: refetchCart } = useCart(true);
     const sqftPerBox = productDataById?.sqft_in_box; // 1 box covers 13.47 sqft
     const [addWastage, setAddWastage] = useState(false);
@@ -108,7 +109,7 @@ export default function ProductDetailPage() {
     const category = productCategoryData?.find((item: any) => item.product_category_id
         === productDataById?.product_category_id);
 
-   
+
 
     const breadcrumbData = [
         { label: 'Home', href: '/' },
@@ -197,9 +198,21 @@ export default function ProductDetailPage() {
     };
 
 
+
     // THIS GOES RIGHT BEFORE YOUR NORMAL RETURN
+    // if (!productDataById) {
+    //     return <div>Loading...</div>;
+    // }
+
     if (!productDataById) {
-        return <div>Loading...</div>;
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="relative w-12 h-12">
+                    <div className="absolute top-0 left-0 w-full h-full rounded-full border-t-2 border-b-2 border-[#C5A24C] animate-spin"></div>
+                </div>
+                <p className="ml-4">Loading...</p>
+            </div>
+        );
     }
     return (
         <div className="container xl:my-[60px] lg:my-[50px] md:my-[40px] my-[30px]">
@@ -352,11 +365,13 @@ export default function ProductDetailPage() {
                         {productDataById?.title}
                     </h1>
                     <div className=' my-4'>
-                        <h5 className='xl:text-3xl lg:text-2xl md:text-base text-2sm leading-none font-bold inline-block lg:mb-5 md:mb-4 mb-3'><span className="text-primary"> ${productDataById?.price}</span> / sqft <p className='xl:text-sm inline-block text-xm leading-none font-bold'>({productDataById?.sqft_in_box} sqft/Box)</p></h5>
+                        <h5 className='xl:text-3xl lg:text-2xl md:text-base text-2sm leading-none font-bold inline-block lg:mb-5 md:mb-4 mb-3'><span className="text-primary"> ${productDataById?.price}</span> / {productDataById?.type === 'Box' ? 'sqft' : 'each'} 
+                        {productDataById?.type === 'Box' && <p className='xl:text-sm inline-block text-xm leading-none font-bold'>({productDataById?.sqft_in_box} sqft/Box)</p>}
+                        </h5>
                         <div className='flex items-center lg:gap-5 md:gap-4 gap-3 flex-wrap'>
                             {productDataById?.main_price && (
                                 <p className="xl:text-lg lg:text-base md:text-sm text-xs leading-none font-medium text-gray-500 line-through">
-                                    ${productDataById?.main_price} / sqft
+                                    ${productDataById?.main_price} / {productDataById?.type === 'Box' ? 'sqft' : 'each'} 
                                 </p>
                             )}
                             {productDataById?.save_button_price &&
@@ -368,10 +383,24 @@ export default function ProductDetailPage() {
 
                     {/* Shipping note */}
 
+                    {/* <div className="flex items-center gap-2 mt-4">
+                        <label className="inline-flex items-start gap-2">
+                            <input
+                                type="checkbox"
+                                id="perPiece"
+                                className="mt-[6px] accent-black border-gray-300 h-[16px] w-[16px]"
+                                checked={isPerPiece}
+                                onChange={(e) => setIsPerPiece(e.target.checked)}
+                            />
+                            <div>
+                                <p className="font-semibold lg:text-base md:text-2sm text-sm">Price Per Piece</p>
+                            </div>
+
+                        </label>
+                    </div> */}
 
 
-
-                    <div className="grid md:grid-cols-5 w-full items-center gap-4 bg-[#FAF8F6] p-4 rounded-md ">
+                    { productDataById?.type === "Box" ? <div className="grid md:grid-cols-5 w-full items-center gap-4 bg-[#FAF8F6] p-4 rounded-md ">
                         {/* SQFT Input */}
                         <div className="col-span-2 ">
                             <QuantityInputGroup
@@ -400,7 +429,22 @@ export default function ProductDetailPage() {
                             // unit="box"
                             />
                         </div>
-                    </div>
+                    </div> :
+                        <div className="grid md:grid-cols-5 w-full items-center gap-4 bg-[#FAF8F6] p-4 rounded-md ">
+                            <div className="col-span-2 ">
+                                <QuantityInputGroup
+                                    label="Enter Quantity (pcs):"
+                                    value={boxes}
+                                    onDecrease={() => updateFromBoxes(Math.max(boxes - 1, 1))}
+                                    onIncrease={() => updateFromBoxes(boxes + 1)}
+                                    onChange={(newVal) => updateFromBoxes(Number(newVal))}
+                                />
+                            </div>
+                        </div>
+
+                    }
+
+
 
                     <div className="grid grid-cols-1 gap-4 mt-4 items-start">
                         {/* <div className="mb-6">
@@ -417,7 +461,7 @@ export default function ProductDetailPage() {
                             </div>
                         </div> */}
                         {
-                            displaySqft > 0 &&
+                            productDataById?.type === "Box" && displaySqft > 0 &&
                             <div>
                                 <label className="inline-flex items-start gap-2">
                                     <input
@@ -480,8 +524,6 @@ export default function ProductDetailPage() {
                                     "Add to Cart"
                                 )}
                             </span>
-
-
                             <FiShoppingCart className='text-2sm  duration-300 transition-all' />
                         </button>
                         <button onClick={() => {
@@ -498,7 +540,6 @@ export default function ProductDetailPage() {
             </div>
             {productDataById?.product_specifications.length > 0 &&
                 <ProductSpecifications product_specifications={productDataById?.product_specifications} />}
-
             {
                 <RelatedProduct
                     categoryId={productDataById?.product_category_id}

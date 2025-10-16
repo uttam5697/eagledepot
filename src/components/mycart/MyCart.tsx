@@ -17,6 +17,7 @@ export default function MyCart() {
   const [loadingCharge, setLoadingCharge] = useState(false);
   const STORE_LOCATION = { lat: 40.3031, lng: -73.9920 };
   const { data: fetchedCartItems = [], refetch, isLoading } = useCart(true);
+  console.log("🚀 ~ MyCart ~ fetchedCartItems:", fetchedCartItems)
 
   const boxesNum = fetchedCartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
   const [singleSelectedAddress, setSingleSelectedAddress] = useState<any>();
@@ -63,16 +64,13 @@ export default function MyCart() {
     }
 
     const newQuantity = action === "increase" ? currentQty + 1 : currentQty - 1;
-
     setQuantities((prev) => ({ ...prev, [id]: newQuantity }));
     setLoadingIds((prev) => ({ ...prev, [id]: true }));
-
     const formData = new FormData();
     formData.append("user_carts_id", String(id));
     formData.append("Usercarts[product_id]", String(productId));
     formData.append("Usercarts[price]", String(price));
     formData.append("Usercarts[quantity]", String(newQuantity));
-
     try {
       const response = await api.post("/userauth/addeditusercarts", formData, {
         headers: {
@@ -103,7 +101,7 @@ export default function MyCart() {
   // };
 
   const itemTotal = fetchedCartItems.reduce((sum: number, item: any) => {
-    const price = parseFloat(item.product.price_per_box);
+    const price = parseFloat(item.product.type === "Box" ? item.product.price_per_box : item.product.price);
     const qty = quantities[item.user_carts_id] ?? item.quantity;
     return sum + price * qty;
   }, 0);
@@ -344,7 +342,7 @@ export default function MyCart() {
                   </thead>
                   <tbody>
                     {fetchedCartItems.map((item: any) => {
-                      const total = parseFloat(item.product.price_per_box) * (quantities[item.user_carts_id] ?? item.quantity);
+                      const total = parseFloat(item.product.type === "Box" ? item.product.price_per_box : item.product.price) * (quantities[item.user_carts_id] ?? item.quantity);
                       return (
                         <tr key={item.user_carts_id}>
                           <td className="flex items-center space-x-4 py-4">
@@ -355,8 +353,8 @@ export default function MyCart() {
                             />
                             <div>
                               <h3 className="text-black mb-1 lg:text-2sm md:text-sm text-xs">{item.product.title}</h3>
-                              <p className="font-bold xl:text-xl lg:text-base md:text-sm text-xs">${item.product.price_per_box
-                              } /sqft/Box</p>
+                              <p className="font-bold xl:text-xl lg:text-base md:text-sm text-xs">${item.product.type === "Box" && item.product.type === "Box" ? item.product.price_per_box : item.product.price
+                              } / {item?.product.type === "Box" ? "sqft/box" : "each"}  </p>
                             </div>
                           </td>
                           <td className="py-4 ps-4">
@@ -389,9 +387,9 @@ export default function MyCart() {
                                 </button>
                               </div>
                             </div>
-                            {item.product.sqft_in_box && (
+                            {item.product.sqft_in_box && item?.product.type === "Box" && (
                               <p className="md:text-[12px] text-[10px] text-black mt-1">
-                                {item.product.sqft_in_box} sq ft/box
+                                {item?.product.type === "Box" ? item.product.sqft_in_box : item.product.sqft} /{item.product.type === "Box" ? "sqft/Box" : "each"}
                               </p>
                             )}
                           </td>
@@ -455,7 +453,7 @@ export default function MyCart() {
                       </span>
                     </div>}
                   {
-                     deliveryType === "Delivery" &&
+                    deliveryType === "Delivery" &&
                     <div className="flex justify-between">
                       <span className="text-black font-light md:text-sm text-xs">
                         {message}
@@ -511,7 +509,7 @@ export default function MyCart() {
                     {/* Option select */}
                     <div className="flex space-x-4">
                       <button
-                        onClick={() => {setDeliveryType("Pickup")}}
+                        onClick={() => { setDeliveryType("Pickup") }}
                         className={`px-4 py-2 rounded-lg border text-sm font-semibold transition 
           ${deliveryType === "Pickup" ? "bg-black text-white" : "bg-gray-100 text-black"}`}
                       >
@@ -524,7 +522,6 @@ export default function MyCart() {
                       >
                         Delivery
                       </button>
-
                     </div>
 
                     {/* Show info depending on selection */}
@@ -552,24 +549,24 @@ export default function MyCart() {
                       </div>
                     ) : (
                       <>
-                      <div className="flex items-center space-x-2">
-                        <p className="text-black md:text-sm text-xs font-semibold">
-                          Pickup selected
-                        </p>
-                        <p className="md:text-xs text-[12px] font-light">
-                          You can collect your order directly from our store.
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <p className="text-black md:text-sm text-xs font-semibold">
-                          Store Address
-                        </p>
-                        <p className="md:text-xs text-[12px] font-light">
-                          {generaldata?.warehouse_address}
-                        </p>
-                      </div>
+                        <div className="flex items-center space-x-2">
+                          <p className="text-black md:text-sm text-xs font-semibold">
+                            Pickup selected
+                          </p>
+                          <p className="md:text-xs text-[12px] font-light">
+                            You can collect your order directly from our store.
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <p className="text-black md:text-sm text-xs font-semibold">
+                            Store Address
+                          </p>
+                          <p className="md:text-xs text-[12px] font-light">
+                            {generaldata?.warehouse_address}
+                          </p>
+                        </div>
                       </>
-                      
+
                     )}
                   </div>
                 </div>

@@ -90,7 +90,6 @@ export default function CheckoutForm({
 
       onSuccess();
       refetch();
-      console.log("Checkout success:", res.data);
       return res.data;
     } catch (error) {
       console.error("Checkout failed:", error);
@@ -201,7 +200,7 @@ export default function CheckoutForm({
             </span>
 
             <span>
-              {Number(item.product.price_per_box * item.quantity).toLocaleString("en-US", {
+              {Number((item.product.type === "Box" ? item.product.price_per_box : item.product.price) * item.quantity).toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 style: "currency",
                 currency: "USD",
@@ -210,29 +209,35 @@ export default function CheckoutForm({
 
 
           </div>
-          
+
 
         ))}
 
-        <div
-            className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
-          >
-            <span>
-              Estimated taxes
-            </span>
+        {
+          tax > 0 && tax !== null &&
+          <div
+          className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
+        >
+          <span>
+            Estimated taxes
+          </span>
 
-            <span>
-              {tax?.toFixed(2)}
-            </span>
+          <span>
+            {tax?.toFixed(2)}
+          </span>
 
 
-          </div>
+        </div>}
+        {
+          charge > 0 && charge !== null &&
           <div
             className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
           >
-            <span>
-              Shipping
-            </span>
+            {
+
+              <span>
+                Shipping
+              </span>}
 
             <span>
               {charge?.toFixed(2)}
@@ -240,7 +245,7 @@ export default function CheckoutForm({
 
 
           </div>
-
+        }
 
         <div
           style={{
