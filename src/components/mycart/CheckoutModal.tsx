@@ -5,7 +5,7 @@ import { useState } from "react";
 import { showToast } from "../../utils/toastUtils";
 import { useNavigate } from "react-router-dom";
 
-export default function CheckoutModal({message,charge, tax,itemTotal, deliveryType, isOpen, onClose, cartItems, totalAmount, currentAddress }: any) {
+export default function CheckoutModal({installationTotal,message,charge, tax,itemTotal, deliveryType, isOpen, onClose, cartItems, totalAmount, currentAddress }: any) {
   const [thankYouOpen, setThankYouOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -19,6 +19,7 @@ export default function CheckoutModal({message,charge, tax,itemTotal, deliveryTy
             <CheckoutForm
               tax={tax}
               itemTotal={itemTotal}
+              installationTotal={installationTotal}
               charge={charge}
               message={message}
               totalAmount={totalAmount}

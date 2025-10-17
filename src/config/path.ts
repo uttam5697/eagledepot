@@ -46,6 +46,16 @@ export const paths = {
             getHref: (slug: string) => `/products/${slug}`,
         },
     },
+    installation: {
+        path: "/installation",
+        getHref: () => "/installation",
+
+        details: {
+            path: "/installation/:slug",
+            getHref: (slug: string) => `/installation/${slug}`,
+        },
+
+    },
 
     privacyPolicy: {
         path: "/privacy-policy",

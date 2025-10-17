@@ -15,15 +15,17 @@ import { useUser } from '../components/context/UserContext';
 import { paths } from '../config/path';
 import { useCart } from '../api/cart';
 import RelatedProduct from '../components/relatedProduct/RelatedProduct';
+import { useFooter } from '../api/home';
 
 export default function ProductDetailPage() {
     const { slug } = useParams();
+    const { data: generaldata } = useFooter(false);
     const { data: productDataById, refetch } = useQuery({
         queryKey: ["product", slug],
         queryFn: () => fetchProductById(slug as string),
         enabled: false,
     });
-    console.log("🚀 ~ ProductDetailPage ~ productDataById:", productDataById?.type)
+    const [addInstallation, setAddInstallation] = useState(false);
     const { data: cartdata, refetch: refetchCart } = useCart(true);
     const sqftPerBox = productDataById?.sqft_in_box; // 1 box covers 13.47 sqft
     const [addWastage, setAddWastage] = useState(false);
@@ -142,6 +144,7 @@ export default function ProductDetailPage() {
             // formData.append('user_carts_id', productDataById?.id);
             formData.append('Usercarts[price]', productDataById?.price);
             formData.append('Usercarts[quantity]', boxes.toString());
+            addInstallation && formData.append('Usercarts[installation_charge]', (displaySqft * generaldata?.installation_charge).toString());
             try {
                 const response = await api.post("/userauth/addeditusercarts", formData, {
                     headers: {
@@ -365,13 +368,13 @@ export default function ProductDetailPage() {
                         {productDataById?.title}
                     </h1>
                     <div className=' my-4'>
-                        <h5 className='xl:text-3xl lg:text-2xl md:text-base text-2sm leading-none font-bold inline-block lg:mb-5 md:mb-4 mb-3'><span className="text-primary"> ${productDataById?.price}</span> / {productDataById?.type === 'Box' ? 'sqft' : 'each'} 
-                        {productDataById?.type === 'Box' && <p className='xl:text-sm inline-block text-xm leading-none font-bold'>({productDataById?.sqft_in_box} sqft/Box)</p>}
+                        <h5 className='xl:text-3xl lg:text-2xl md:text-base text-2sm leading-none font-bold inline-block lg:mb-5 md:mb-4 mb-3'><span className="text-primary"> ${productDataById?.price}</span> / {productDataById?.type === 'Box' ? 'sqft' : 'each'}
+                            {productDataById?.type === 'Box' && <p className='xl:text-sm inline-block text-xm leading-none font-bold'>({productDataById?.sqft_in_box} sqft/Box)</p>}
                         </h5>
                         <div className='flex items-center lg:gap-5 md:gap-4 gap-3 flex-wrap'>
                             {productDataById?.main_price && (
                                 <p className="xl:text-lg lg:text-base md:text-sm text-xs leading-none font-medium text-gray-500 line-through">
-                                    ${productDataById?.main_price} / {productDataById?.type === 'Box' ? 'sqft' : 'each'} 
+                                    ${productDataById?.main_price} / {productDataById?.type === 'Box' ? 'sqft' : 'each'}
                                 </p>
                             )}
                             {productDataById?.save_button_price &&
@@ -399,8 +402,7 @@ export default function ProductDetailPage() {
                         </label>
                     </div> */}
 
-
-                    { productDataById?.type === "Box" ? <div className="grid md:grid-cols-5 w-full items-center gap-4 bg-[#FAF8F6] p-4 rounded-md ">
+                    {productDataById?.type === "Box" ? <div className="grid md:grid-cols-5 w-full items-center gap-4 bg-[#FAF8F6] p-2 rounded-md ">
                         {/* SQFT Input */}
                         <div className="col-span-2 ">
                             <QuantityInputGroup
@@ -416,7 +418,6 @@ export default function ProductDetailPage() {
 
                         {/* Equals Sign */}
                         <div className="text-2xl font-bold text-center col-span-1 mt-5 md:block hidden">=</div>
-
                         {/* Boxes Input */}
                         <div className="col-span-2">
                             <QuantityInputGroup
@@ -430,7 +431,7 @@ export default function ProductDetailPage() {
                             />
                         </div>
                     </div> :
-                        <div className="grid md:grid-cols-5 w-full items-center gap-4 bg-[#FAF8F6] p-4 rounded-md ">
+                        <div className="grid md:grid-cols-5 w-full items-center gap-4 bg-[#FAF8F6] p-2 rounded-md ">
                             <div className="col-span-2 ">
                                 <QuantityInputGroup
                                     label="Enter Quantity (pcs):"
@@ -446,7 +447,7 @@ export default function ProductDetailPage() {
 
 
 
-                    <div className="grid grid-cols-1 gap-4 mt-4 items-start">
+                    <div className="grid grid-cols-1 gap-4 items-start">
                         {/* <div className="mb-6">
                             
 
@@ -460,6 +461,43 @@ export default function ProductDetailPage() {
                                 </span>
                             </div>
                         </div> */}
+
+                        <div className="mt-6 p-4 bg-[#FAF8F6] rounded-md border border-gray-200">
+                            <div className="flex items-center gap-3 mb-3">
+                                <input
+                                    type="checkbox"
+                                    id="installation"
+                                    checked={addInstallation}
+                                    onChange={(e) => setAddInstallation(e.target.checked)}
+                                    className="w-5 h-5 accent-primary"
+                                />
+                                <label htmlFor="installation" className="font-semibold text-base">
+                                    Add Installation (${generaldata?.installation_charge?.toFixed(2)}/sqft)
+                                </label>
+                            </div>
+
+                            {addInstallation && (
+                                <div className="flex items-center gap-3 mb-4">
+                                    <span className="text-sm text-gray-700">Price:</span>
+                                    <div>
+                                        ${generaldata?.installation_charge}
+                                    </div>
+                                    {/* <input
+                                        type="number"
+                                        readOnly
+                                        value={generaldata?.installation_charge}
+                                        onChange={(e) => setInstallationPrice(Number(e.target.value))}
+                                        placeholder="Enter price per sqft"
+                                        className="border rounded-md p-2 w-32 focus:ring-primary focus:border-primary"
+                                    /> */}
+                                    <span className="text-sm text-gray-600">x {sqftPerBox * boxes} sqft = </span>
+                                    <span className="font-bold text-primary">${(displaySqft * generaldata?.installation_charge).toFixed(2)}</span>
+                                </div>
+                            )}
+
+                            <div dangerouslySetInnerHTML={{ __html: generaldata?.installation_description }} />
+
+                        </div>
                         {
                             productDataById?.type === "Box" && displaySqft > 0 &&
                             <div>

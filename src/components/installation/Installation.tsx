@@ -12,7 +12,7 @@ export default function Installation() {
     const fetchInstallations = async () => {
       try {
         const res = await fetch(
-          `${env.API_URL}/beforeauth/getinstallation`
+          `${env.API_URL}beforeauth/getinstallation`
         );
         const data = await res.json();
 
@@ -65,7 +65,7 @@ export default function Installation() {
                 className="group rounded-lg flex flex-col h-full bg-white md:p-2 p-1 shadow-sm transition-transform duration-300 hover:shadow-md"
               >
                 {/* Image */}
-                <div className="relative overflow-hidden h-full rounded-t-lg">
+                <div className="relative overflow-hidden rounded-t-lg">
                   <img
                     src={item.image}
                     alt={item.title}

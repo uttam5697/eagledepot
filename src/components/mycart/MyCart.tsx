@@ -17,8 +17,9 @@ export default function MyCart() {
   const [loadingCharge, setLoadingCharge] = useState(false);
   const STORE_LOCATION = { lat: 40.3031, lng: -73.9920 };
   const { data: fetchedCartItems = [], refetch, isLoading } = useCart(true);
-  console.log("🚀 ~ MyCart ~ fetchedCartItems:", fetchedCartItems)
+const [includeInstallation, setIncludeInstallation] = useState(true);
 
+  const [installationRate, setInstallationRate] = useState<number | null>(null);
   const boxesNum = fetchedCartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
   const [singleSelectedAddress, setSingleSelectedAddress] = useState<any>();
   const { data: generaldata } = useFooter(false);
@@ -93,6 +94,10 @@ export default function MyCart() {
     }
   };
 
+  const handleToggleInstallation = () => {
+    setIncludeInstallation((prev) => !prev);
+  };
+
 
 
   // const handleQuantityChange = (id: number, value: string) => {
@@ -101,16 +106,42 @@ export default function MyCart() {
   // };
 
   const itemTotal = fetchedCartItems.reduce((sum: number, item: any) => {
-    const price = parseFloat(item.product.type === "Box" ? item.product.price_per_box : item.product.price);
+    const price = parseFloat(item.product.price_per_box);
     const qty = quantities[item.user_carts_id] ?? item.quantity;
     return sum + price * qty;
   }, 0);
 
-  // const greenPackaging = 0;
+   useEffect(() => {
+    setInstallationRate(generaldata?.installation_charge || 0);
+  }, [generaldata]);
+
+
+  const installationAll = fetchedCartItems.reduce((sum: number, item: any) => {
+    const installationCharge = parseFloat(item.installation_charge) || 0;
+    return sum + installationCharge;
+  }, 0);
+
   const taxRate = generaldata?.tax / 100; // 2%
   const tax = itemTotal * taxRate;
+  
+
+  const totalSqft = fetchedCartItems.reduce((acc: number, item: any) => {
+    const qty = quantities[item.user_carts_id] ?? item.quantity;
+    const sqftPerBox = parseFloat(item.product.sqft_in_box || 0);
+    return acc + qty * sqftPerBox;
+  }, 0);
+
+  const installationTotal =
+   installationAll > 0 &&  includeInstallation && installationRate
+      ? totalSqft * installationRate
+      : 0;
+
+  // const installationTotal =
+  //   includeInstallation ? installationAll : 0;
+
+  const discountAmount = 0
   const shippingCost = deliveryType === "Delivery" ? charge : 0;
-  const totalAmount = itemTotal + shippingCost + tax;
+  const totalAmount = itemTotal + shippingCost + tax + installationTotal - discountAmount;
 
 
 
@@ -277,6 +308,8 @@ export default function MyCart() {
     calculateCharge();
   }, [boxesNum])
 
+
+
   useEffect(() => {
     const body = document.body;
     if (isAddressModalOpen || isChangeModalOpen) {
@@ -426,6 +459,31 @@ export default function MyCart() {
                       ${itemTotal.toFixed(2)}
                     </span>
                   </div>
+                 
+                 { 
+                    installationAll > 0 &&
+                    <div className="flex justify-between items-center mt-3">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={includeInstallation}
+                        onChange={handleToggleInstallation}
+                        className="w-4 h-4 accent-black cursor-pointer"
+                      />
+                      <span className="text-black font-light md:text-sm text-xs">
+                        Installation
+                      </span>
+                    </div>
+
+                    {includeInstallation ? (
+                      <span className="font-semibold">${installationTotal.toFixed(2)}</span>
+                    ) : (
+                      <span className="font-semibold text-gray-400 line-through">
+                        ${installationTotal.toFixed(2)}
+                      </span>
+                    )}
+                  </div>}
+
                   {
                     generaldata?.tax !== null &&
                     <div className="flex justify-between">
@@ -631,7 +689,7 @@ export default function MyCart() {
         }}
         isAddressModalOpen={isAddressModalOpen}
       />
-      <CheckoutModal message={message} charge={charge} tax={tax} itemTotal={itemTotal} deliveryType={deliveryType} isOpen={isCheckoutModalOpen} onClose={() => setIsCheckoutModalOpen(false)} cartItems={fetchedCartItems} totalAmount={totalAmount} currentAddress={selectedId} />
+      <CheckoutModal message={message} charge={charge} tax={tax} installationTotal={installationTotal} itemTotal={itemTotal} deliveryType={deliveryType} isOpen={isCheckoutModalOpen} onClose={() => setIsCheckoutModalOpen(false)} cartItems={fetchedCartItems} totalAmount={totalAmount} currentAddress={selectedId} />
     </>
   );
 }

@@ -17,6 +17,8 @@ import Callback from "./components/Callback";
 import PaymentForm from "./components/testpayment";
 import RedirectIfLoggedIn from "./components/RedirectIfLoggedIn";
 import DeliveryCalculator from "./components/delcalcu/Calculate";
+import InstallationDetail from "./components/installation/InstallationDetail";
+import Installation from "./components/installation/Installation";
 
 // Define the routes separately
 const routes = [
@@ -78,6 +80,14 @@ const routes = [
       {
         path: paths.termsandconditions.path,
         element: <Termsandconditions />,
+      },
+      {
+        path: paths.installation.path,
+        element: <Installation />,
+      },
+      {
+        path: paths.installation.details.path,
+        element: <InstallationDetail />,
       },
       {
         path: paths.mycart.path,

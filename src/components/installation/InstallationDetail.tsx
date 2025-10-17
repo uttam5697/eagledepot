@@ -75,7 +75,7 @@ function InstallationDetail() {
             <SwiperSlide key={index} className="bg-cover bg-center relative">
               {media.type === "Image" ? (
                 <img
-                  className="w-full h-[100vh] object-cover object-center"
+                  className="w-full xl:h-[80vh] lg:h-[75vh] md:h-[70vh] h-[70vh] object-cover object-center"
                   src={media.file}
                   alt={installation.title}
                 />
@@ -83,7 +83,7 @@ function InstallationDetail() {
                 <iframe
                   width="100%"
                   height="100%"
-                  className="h-[100vh]"
+                  className="w-full xl:h-[80vh] lg:h-[75vh] md:h-[70vh] h-[70vh] object-cover object-center"
                   src={`https://www.youtube.com/embed/${media.video_url}`}
                   title="YouTube video player"
                   frameBorder="0"

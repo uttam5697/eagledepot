@@ -8,8 +8,7 @@ import api from "../../lib/api";
 import { useQuery, type QueryFunctionContext } from "@tanstack/react-query";
 import ProductSkeleton from "../ui/ProductSkeleton";
 import { useFooter } from "../../api/home";
-
-
+import HearthBanner from "../HearthWidget";
 
 export default function WeeklyBestsellers() {
     const prevRef = useRef<HTMLButtonElement>(null);
@@ -56,12 +55,11 @@ export default function WeeklyBestsellers() {
     const { data: generaldata } = useFooter(false);
     return (
         <section
-            className={` ${
-                productDataById?.length && productDataById.length > 0
+            className={` ${productDataById?.length && productDataById.length > 0
                 ? 'overflow-hidden'
                 : 'overflow-visible'
-            } bg-primary-gradient xl:pt-[60px] lg:pt-[50px] md:pt-[40px] pt-[30px] xl:pb-[75px] lg:pb-[65px] md:pb-[55px] pb-[45px]`}
-            >
+                } bg-primary-gradient xl:pt-[60px] lg:pt-[50px] md:pt-[40px] pt-[30px] xl:pb-[75px] lg:pb-[65px] md:pb-[55px] pb-[45px]`}
+        >
             <div className="container">
                 <div className="2xl:mb-10 xl:mb-8 lg:mb-6 mb-4 flex justify-between items-center flex-wrap">
                     <div>
@@ -89,9 +87,7 @@ export default function WeeklyBestsellers() {
                             </button>
                         </div>
                     </div>
-
                 </div>
-
                 <Swiper
                     className="!overflow-visible"
                     spaceBetween={12}
@@ -102,15 +98,10 @@ export default function WeeklyBestsellers() {
                     }}
                     modules={[Navigation]}
                     onBeforeInit={(swiper) => {
-                        // Bind navigation buttons manually here
-                        if (
-                            swiper.params.navigation &&
-                            typeof swiper.params.navigation !== "boolean"
-                        ) {
+                        if (swiper.params.navigation && typeof swiper.params.navigation !== "boolean") {
                             swiper.params.navigation.prevEl = prevRef.current;
                             swiper.params.navigation.nextEl = nextRef.current;
                         }
-
                     }}
                     breakpoints={{
                         120: {
@@ -135,28 +126,33 @@ export default function WeeklyBestsellers() {
                         },
                     }}
                 >
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6 lg:gap-5 md:gap-4 gap-3">
-                        {
-                            isLoading
-                                ? Array.from({ length:2  }).map((_, index) => (
-                                    <ProductSkeleton key={index} />
-                                ))
-                                :
-                                productDataById?.map((product: any) => (
-                                    <SwiperSlide key={product.id} className="!h-auto">
-                                        <ProductCard
-                                            id={product.product_id}
-                                            title={product.title}
-                                            imageUrl={product.image}
-                                            slug={product.slug}
-                                            price_per_box={product.price_per_box}
-                                            price={product.price}
-                                            type={product.type}
-                                        />
-                                    </SwiperSlide>
-                                ))
-                        }
-                    </div>
+                    {/* Hearth Banner as first slide */}
+                    <SwiperSlide className="!h-auto flex justify-center my-auto">
+                        <div className="w-full max-w-[310px] ">
+                            <HearthBanner size="square" />
+                        </div>
+                    </SwiperSlide>
+
+                    {/* Products */}
+                    {isLoading
+                        ? Array.from({ length: 2 }).map((_, index) => (
+                            <SwiperSlide key={index} className="!h-auto">
+                                <ProductSkeleton />
+                            </SwiperSlide>
+                        ))
+                        : productDataById?.map((product: any) => (
+                            <SwiperSlide key={product.id} className="!h-auto">
+                                <ProductCard
+                                    id={product.product_id}
+                                    title={product.title}
+                                    imageUrl={product.image}
+                                    slug={product.slug}
+                                    price_per_box={product.price_per_box}
+                                    price={product.price}
+                                    type={product.type}
+                                />
+                            </SwiperSlide>
+                        ))}
                 </Swiper>
             </div>
         </section>

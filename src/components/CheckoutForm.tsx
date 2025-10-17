@@ -29,6 +29,7 @@ interface CheckoutFormProps {
   currentAddress: any;
   onSuccess: () => void;
   onClose: () => void;
+  installationTotal: number;
 }
 
 interface CheckoutPayload {
@@ -40,6 +41,7 @@ interface CheckoutPayload {
   "Userorder[tax]": number;
   "Userorder[shipping]": number;
   "Userorder[order_status]": string;
+  "Userorder[installation_charge]": number;
   "Userorder[delivery_type]": "Delivery" | "Pickup";
   "Userorder[user_carts_id]": string;
   "Userorder[appuser_address_id]"?: string; // 👈 make optional
@@ -48,6 +50,7 @@ interface CheckoutPayload {
 export default function CheckoutForm({
   itemTotal,
   charge,
+  installationTotal,
   tax,
   totalAmount,
   cartItems,
@@ -55,6 +58,7 @@ export default function CheckoutForm({
   currentAddress,
   onSuccess,
 }: CheckoutFormProps) {
+  console.log("🚀 ~ CheckoutForm ~ installationTotal:", installationTotal)
   const { refetch } = useCart(true);
   const { data: generaldata } = useFooter(false);
 
@@ -156,6 +160,7 @@ export default function CheckoutForm({
           "Userorder[total]": totalAmount,
           "Userorder[order_status]": "Confirm",
           "Userorder[delivery_type]": deliveryType, // "Delivery" or "Pickup"
+          "Userorder[installation_charge]": installationTotal,
           "Userorder[user_carts_id]": cartItems
             ?.map((item: any) => item.user_carts_id)
             .join(","),
@@ -216,18 +221,18 @@ export default function CheckoutForm({
         {
           tax > 0 && tax !== null &&
           <div
-          className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
-        >
-          <span>
-            Estimated taxes
-          </span>
+            className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
+          >
+            <span>
+              Estimated taxes
+            </span>
 
-          <span>
-            {tax?.toFixed(2)}
-          </span>
+            <span>
+              {tax?.toFixed(2)}
+            </span>
 
 
-        </div>}
+          </div>}
         {
           charge > 0 && charge !== null &&
           <div
@@ -246,7 +251,19 @@ export default function CheckoutForm({
 
           </div>
         }
-
+          {
+          installationTotal !== 0 && installationTotal !== null &&
+          <div
+            className="flex text-black justify-between items-center md:text-[16px] text-[12px] mb-2"
+          >
+            <span>
+              Installation
+            </span>
+            <span>
+              ${installationTotal?.toFixed(2)}
+            </span>
+          </div>
+        }
         <div
           style={{
             borderTop: "1px dashed #dadbdd",
