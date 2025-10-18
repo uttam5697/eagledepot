@@ -57,6 +57,7 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
     action: "increase" | "decrease"
   ) => {
     const currentQty = quantity || 1;
+  
 
     // If decreasing last quantity → delete instead
     if (action === "decrease" && currentQty <= 1) {
@@ -106,7 +107,7 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
   // };
 
   const itemTotal = fetchedCartItems.reduce((sum: number, item: any) => {
-    const price = parseFloat(item.product.price_per_box);
+    const price = parseFloat(item?.type === "Box" ? item.product.price_per_box : item.product.price);
     const qty = quantities[item.user_carts_id] ?? item.quantity;
     return sum + price * qty;
   }, 0);
@@ -395,7 +396,7 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
                               <div className="flex items-center col-span-1 justify-start p-2">
                                 <button
                                   onClick={() =>
-                                    updateQuantity(item.user_carts_id, item.product.product_id, item.product.price_per_box, quantities[item.user_carts_id] ?? item.quantity, "decrease")
+                                    updateQuantity(item.user_carts_id, item.product.product_id,( item.product.type === "Box" ? item.product.price_per_box: item.product.price), quantities[item.user_carts_id] ?? item.quantity, "decrease")
                                   }
                                   className="bg-primary text-white p-1 lg:p-2 rounded-full"
                                 >
@@ -412,7 +413,7 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
                               <div className="flex items-center col-span-1 justify-start p-2">
                                 <button
                                   onClick={() =>
-                                    updateQuantity(item.user_carts_id, item.product.product_id, item.product.price_per_box, quantities[item.user_carts_id] ?? item.quantity, "increase")
+                                    updateQuantity(item.user_carts_id, item.product.product_id, ( item.product.type === "Box" ? item.product.price_per_box: item.product.price), quantities[item.user_carts_id] ?? item.quantity, "increase")
                                   }
                                   className="bg-primary text-white p-1 lg:p-2 rounded-full"
                                 >

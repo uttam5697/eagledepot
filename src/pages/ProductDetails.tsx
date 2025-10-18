@@ -16,6 +16,7 @@ import { paths } from '../config/path';
 import { useCart } from '../api/cart';
 import RelatedProduct from '../components/relatedProduct/RelatedProduct';
 import { useFooter } from '../api/home';
+import HearthBanner from '../components/HearthWidget';
 
 export default function ProductDetailPage() {
     const { slug } = useParams();
@@ -30,7 +31,8 @@ export default function ProductDetailPage() {
     const sqftPerBox = productDataById?.sqft_in_box; // 1 box covers 13.47 sqft
     const [addWastage, setAddWastage] = useState(false);
     const [baseSqft, setBaseSqft] = useState(0); // always without wastage
-    // const [boxes, setBoxes] = useState(1);
+    const [eachBoxes, setEachBoxes] = useState(1);
+    console.log("🚀 ~ ProductDetailPage ~ eachBoxes:", eachBoxes)
     const [isBuyNowClicked, setIsBuyNowClicked] = useState(false);
     const [productGallery, setProductGallery] = useState([]);
     // const [sqft, setSqft] = useState(0);
@@ -124,7 +126,7 @@ export default function ProductDetailPage() {
     }, [slug])
 
     const handleAddToCart = async () => {
-        if (displaySqft <= 0) {
+        if (displaySqft <= 0 && productDataById?.type === "Box") {
             showToast("Please enter sqft", "error");
             return
         }
@@ -143,7 +145,7 @@ export default function ProductDetailPage() {
             formData.append('Usercarts[product_id]', productDataById?.product_id);
             // formData.append('user_carts_id', productDataById?.id);
             formData.append('Usercarts[price]', productDataById?.price);
-            formData.append('Usercarts[quantity]', boxes.toString());
+            formData.append('Usercarts[quantity]', productDataById?.type === "Box" ? boxes.toString() : eachBoxes.toString());
             addInstallation && formData.append('Usercarts[installation_charge]', (displaySqft * generaldata?.installation_charge).toString());
             try {
                 const response = await api.post("/userauth/addeditusercarts", formData, {
@@ -187,13 +189,20 @@ export default function ProductDetailPage() {
         setBaseSqft(newBaseSqft);
     };
 
+
+    const updateFromEachBoxes = (newBoxes: number) => {
+        console.log("🚀 ~ updateFromEachBoxes ~ newBoxes:", newBoxes)
+        setEachBoxes(newBoxes);
+    }
+
     // 📌 Displayed sqft (depends on wastage)
     const displaySqft = addWastage
         ? parseFloat((baseSqft * 1.1)?.toFixed(2))
         : parseFloat(baseSqft?.toFixed(2));
 
     // 📌 Boxes (calculated dynamically from displaySqft)
-    const boxes = Math.ceil(displaySqft / sqftPerBox);
+    const boxes = (Math.ceil(displaySqft / sqftPerBox))
+    const boxeseach = (Math.ceil(displaySqft / sqftPerBox)) || 1
 
     // 📌 Toggle wastage
     const handleWastageToggle = (checked: boolean) => {
@@ -435,10 +444,10 @@ export default function ProductDetailPage() {
                             <div className="col-span-2 ">
                                 <QuantityInputGroup
                                     label="Enter Quantity (pcs):"
-                                    value={boxes}
-                                    onDecrease={() => updateFromBoxes(Math.max(boxes - 1, 1))}
-                                    onIncrease={() => updateFromBoxes(boxes + 1)}
-                                    onChange={(newVal) => updateFromBoxes(Number(newVal))}
+                                    value={eachBoxes}
+                                    onDecrease={() => updateFromEachBoxes(Math.max(eachBoxes - 1, 1))}
+                                    onIncrease={() => updateFromEachBoxes(eachBoxes + 1)}
+                                    onChange={(newVal) => updateFromEachBoxes(Number(newVal))}
                                 />
                             </div>
                         </div>
@@ -461,6 +470,25 @@ export default function ProductDetailPage() {
                                 </span>
                             </div>
                         </div> */}
+
+
+                        {
+                            productDataById?.type === "Box" && displaySqft > 0 &&
+                            <div>
+                                <label className="inline-flex items-start gap-2">
+                                    <input
+                                        type="checkbox"
+                                        className="mt-[6px] accent-black border-gray-300 h-[16px] w-[16px]"
+                                        checked={addWastage}
+                                        onChange={(e) => handleWastageToggle(e.target.checked)}
+                                    />
+                                    <div>
+                                        <p className="font-semibold lg:text-base md:text-2sm text-sm">Add wastage (10%)</p>
+                                        <p className="lg:text-base md:text-2sm text-sm font-light">1 box - No wastage added. Ships in 1 pallet.</p>
+                                    </div>
+                                </label>
+                            </div>
+                        }
 
                         <div className="mt-6 p-4 bg-[#FAF8F6] rounded-md border border-gray-200">
                             <div className="flex items-center gap-3 mb-3">
@@ -498,23 +526,6 @@ export default function ProductDetailPage() {
                             <div dangerouslySetInnerHTML={{ __html: generaldata?.installation_description }} />
 
                         </div>
-                        {
-                            productDataById?.type === "Box" && displaySqft > 0 &&
-                            <div>
-                                <label className="inline-flex items-start gap-2">
-                                    <input
-                                        type="checkbox"
-                                        className="mt-[6px] accent-black border-gray-300 h-[16px] w-[16px]"
-                                        checked={addWastage}
-                                        onChange={(e) => handleWastageToggle(e.target.checked)}
-                                    />
-                                    <div>
-                                        <p className="font-semibold lg:text-base md:text-2sm text-sm">Add wastage (10%)</p>
-                                        <p className="lg:text-base md:text-2sm text-sm font-light">1 box - No wastage added. Ships in 1 pallet.</p>
-                                    </div>
-                                </label>
-                            </div>
-                        }
                     </div>
                     {/* <div className="grid grid-cols-2 gap-4 items-start mt-[84px]">
                         <button onClick={handleAddToCart} className="flex justify-between white-btn border border-black group before:!hidden after:!hidden hover:bg-black xl:px-6 px-4 xl:py-[18px] py-[14px]">
@@ -576,14 +587,21 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
             </div>
+
+            {/* </SwiperSlide> */}
             {productDataById?.product_specifications.length > 0 &&
                 <ProductSpecifications product_specifications={productDataById?.product_specifications} />}
+
+                <div className="xl:h-[300px] xl:w-[300px] md:h-[250px] md:w-[250px] h-[220px] w-[220px]  flex">
+                    <HearthBanner size="square" />
+                </div>
             {
                 <RelatedProduct
                     categoryId={productDataById?.product_category_id}
                     excludeProductId={productDataById?.product_id}
                 />
             }
+             
         </div>
     );
 }

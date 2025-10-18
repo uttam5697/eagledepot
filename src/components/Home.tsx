@@ -39,6 +39,8 @@ const Home: React.FC = () => {
           <SpsFlooring productCategory={homescreenData?.product_category} />
         </AnimatedSection>
       </div >
+     
+      {/* <HearthBanner size="tall" /> */}
       <AnimatedSection direction="up" delay={0.3}>
         <WhatOurClients />
       </AnimatedSection>

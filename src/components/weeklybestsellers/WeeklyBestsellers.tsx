@@ -129,7 +129,7 @@ export default function WeeklyBestsellers() {
                     {/* Hearth Banner as first slide */}
                     <SwiperSlide className="!h-auto flex justify-center my-auto">
                         <div className="w-full max-w-[310px] ">
-                            <HearthBanner size="square" />
+                            <HearthBanner size="tall" />
                         </div>
                     </SwiperSlide>
 

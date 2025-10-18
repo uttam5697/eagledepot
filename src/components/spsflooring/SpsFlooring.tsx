@@ -5,6 +5,7 @@ import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useFooter } from "../../api/home";
 import { FiArrowUpRight } from "react-icons/fi";
+import HearthBanner from "../HearthWidget";
 
 export default function SpsFlooring({ productCategory }: any) {
   const prevRef = useRef<HTMLButtonElement>(null);
@@ -12,7 +13,7 @@ export default function SpsFlooring({ productCategory }: any) {
   const navigate = useNavigate();
   const { data: generaldata } = useFooter(false);
   return (
-    <section className="xl:mb-[100px] overflow-hidden lg:mb-[80px] md:mb-[60px] mb-[40px] xl:mt-[100px] lg:mt-[80px] md:mt-[60px] mt-[40px]">
+    <section className="xl:mb-[100px] overflow-hidden lg:mb-[80px] md:mb-[60px] mb-[40px] xl:mt-[80px] lg:mt-[60px] md:mt-[40px] mt-[20px]">
       <div className="container">
         {/* Header */}
         <div className="2xl:mb-10 xl:mb-8 lg:mb-6 md:mb-4 mb-2 flex justify-between items-center">
@@ -40,6 +41,8 @@ export default function SpsFlooring({ productCategory }: any) {
           </div>
         </div>
 
+
+
         {/* Swiper Slider */}
         <Swiper
           className="!overflow-visible"
@@ -61,6 +64,7 @@ export default function SpsFlooring({ productCategory }: any) {
             }
           }}
         >
+         
           {productCategory?.map((item: any, index: number) => (
             <>
               <SwiperSlide key={index} className="!h-auto !w-auto">
@@ -72,36 +76,36 @@ export default function SpsFlooring({ productCategory }: any) {
                       alt="FlooringImg"
                     />
                     <div className="absolute backdrop-blur-[10px] rounded-2xl px-8 py-3 z-20 bottom-0 w-full p-[10px] -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 h-fit">
-                        <h2 className="font-playfairDisplay text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none group-hover:hidden">
+                      <h2 className="font-playfairDisplay text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none group-hover:hidden">
+                        {item.title}
+                      </h2>
+                      <div className="absolute transition-transform duration-500 translate-y-[200%] group-hover:translate-y-0 group-hover:relative">
+                        <h2 className="font-playfairDisplay mb-4 text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none">
                           {item.title}
                         </h2>
-                        <div className="absolute transition-transform duration-500 translate-y-[200%] group-hover:translate-y-0 group-hover:relative">
-                          <h2 className="font-playfairDisplay mb-4 text-white xl:text-[24px] lg:text-[20px] md:text-[18px] text-[16px] leading-none">
-                            {item.title}
-                          </h2>
-                          <p
-                            className="font-quicksand text-white xl:text-[16px] lg:text-[14px] md:text-[12px] text-[12px] leading-none custom-html"
-                            dangerouslySetInnerHTML={{
-                              __html: item.description,
-                            }}
-                          />
-                          <div
-                            onClick={() =>
-                              navigate(
-                                `/products/category/${item.product_category_id}`
-                              )
-                            }
-                            className="max-w-[188px]"
+                        <p
+                          className="font-quicksand text-white xl:text-[16px] lg:text-[14px] md:text-[12px] text-[12px] leading-none custom-html"
+                          dangerouslySetInnerHTML={{
+                            __html: item.description,
+                          }}
+                        />
+                        <div
+                          onClick={() =>
+                            navigate(
+                              `/products/category/${item.product_category_id}`
+                            )
+                          }
+                          className="max-w-[188px]"
+                        >
+                          <a
+                            href="#"
+                            className="group text-black xl:text-[16px] lg:text-[14px] md:text-sm text-xs font-quicksand font-bold md:p-3 p-2 bg-white rounded-full flex justify-between items-center gap-4"
                           >
-                            <a
-                              href="#"
-                              className="group text-black xl:text-[16px] lg:text-[14px] md:text-sm text-xs font-quicksand font-bold md:p-3 p-2 bg-white rounded-full flex justify-between items-center gap-4"
-                            >
-                              See Detail
-                              <FiArrowUpRight className="lg:text-base md:text-2sm text-sm group-hover:rotate-45 duration-300 transition-all" />
-                            </a>
-                          </div>
+                            See Detail
+                            <FiArrowUpRight className="lg:text-base md:text-2sm text-sm group-hover:rotate-45 duration-300 transition-all" />
+                          </a>
                         </div>
+                      </div>
                     </div>
                   </div>
                 </div>

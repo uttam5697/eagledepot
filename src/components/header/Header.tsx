@@ -67,7 +67,7 @@ export default function Header() {
               <Link to="/?product" className={`text-white text-[18px] ${pathname === '/?product' ? 'active' : ''}`}>Product</Link>
               <Link to="/about-us" className={`text-white text-[18px] ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>
               <Link to="/contact-us" className={`text-white text-[18px] ${pathname === '/contact-us' ? 'active' : ''}`}>Contact Us</Link>
-              <Link to="/installation" className={`text-white ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
+              <Link to="/installation" className={`text-white text-[18px] ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
               {/* <Link to="/calculate" className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>Calculate</Link> */}
             </nav>
 
