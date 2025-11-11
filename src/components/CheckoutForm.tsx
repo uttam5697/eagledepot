@@ -58,7 +58,6 @@ export default function CheckoutForm({
   currentAddress,
   onSuccess,
 }: CheckoutFormProps) {
-  console.log("🚀 ~ CheckoutForm ~ installationTotal:", installationTotal)
   const { refetch } = useCart(true);
   const { data: generaldata } = useFooter(false);
 
@@ -103,77 +102,96 @@ export default function CheckoutForm({
   // const greenPackaging = 2;
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-    setLoading(true);
-    setMessage(null);
-    setSuccess(false);
+  e.preventDefault();
+  if (!stripe || !elements) return;
 
-    try {
-      // Step 1: Create Payment Intent in USD
-      const formData = new FormData();
-      formData.append("amount", String(totalAmount));
-      formData.append("currency", "usd");
+  // 🛑 Prevent double-clicks
+  if (loading) return;
 
-      const res = await api.post<PaymentIntentResponse>(
-        "/userauth/createpaymentintent",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            auth_key: authKey,
-          },
-        }
-      );
+  setLoading(true);
+  setMessage(null);
+  setSuccess(false);
 
-      const { clientSecret } = res.data;
-      if (!clientSecret) throw new Error("Failed to initialize payment");
+  try {
+    // Step 1: Create Payment Intent
+    const formData = new FormData();
+    formData.append("amount", String(totalAmount));
+    formData.append("currency", "usd");
 
-      // Step 2: Confirm Card Payment
-      const card = elements.getElement(CardElement) as StripeCardElement | null;
-      if (!card) throw new Error("Card element not found");
-
-      const { error, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        { payment_method: { card } }
-      );
-
-      // Step 3: Handle Stripe Response
-      if (error) {
-        setMessage(error.message || "Payment failed");
-        return;
+    const res = await api.post<PaymentIntentResponse>(
+      "/userauth/createpaymentintent",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          auth_key: authKey,
+        },
       }
+    );
 
-      if (paymentIntent?.status === "succeeded") {
-        setSuccess(true);
-        setMessage("✅ Payment succeeded! Processing order...");
-
-        // Step 4: Call Checkout API
-        await checkoutOrder({
-          "Userorder[appuser_address_id]": deliveryType === "Delivery" ? currentAddress : "",
-          "Userorder[payment_type]": "Online",
-          "Userorder[payment_status]": "succeeded",
-          "Userorder[payment_id]": paymentIntent.id,
-          "Userorder[tax]": tax,
-          "Userorder[shipping]": 0,
-          "Userorder[sub_total]": itemTotal,
-          "Userorder[total]": totalAmount,
-          "Userorder[order_status]": "Confirm",
-          "Userorder[delivery_type]": deliveryType, // "Delivery" or "Pickup"
-          "Userorder[installation_charge]": installationTotal,
-          "Userorder[user_carts_id]": cartItems
-            ?.map((item: any) => item.user_carts_id)
-            .join(","),
-        });
-      } else {
-        setMessage(`Payment status: ${paymentIntent?.status}`);
-      }
-    } catch (err) {
-      setMessage(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
+    // ✅ Handle server error safely
+    if (res.status >= 400) {
+      throw new Error(`Server error (${res.status})`);
     }
-  };
+
+    const { clientSecret } = res.data;
+    if (!clientSecret) throw new Error("Failed to initialize payment");
+
+    // Step 2: Confirm payment
+    const card = elements.getElement(CardElement) as StripeCardElement | null;
+    if (!card) throw new Error("Card element not found");
+
+    const { error, paymentIntent } = await stripe.confirmCardPayment(
+      clientSecret,
+      { payment_method: { card } }
+    );
+
+    if (error) {
+      setMessage(error.message || "Payment failed");
+      setSuccess(false);
+      return;
+    }
+
+    // Step 3: Success
+    if (paymentIntent?.status === "succeeded") {
+      setSuccess(true);
+      setMessage("✅ Payment succeeded! Processing order...");
+
+      await checkoutOrder({
+        "Userorder[appuser_address_id]":
+          deliveryType === "Delivery" ? currentAddress : "",
+        "Userorder[payment_type]": "Online",
+        "Userorder[payment_status]": "succeeded",
+        "Userorder[payment_id]": paymentIntent.id,
+        "Userorder[tax]": tax,
+        "Userorder[shipping]": 0,
+        "Userorder[sub_total]": itemTotal,
+        "Userorder[total]": totalAmount,
+        "Userorder[order_status]": "Confirm",
+        "Userorder[delivery_type]": deliveryType,
+        "Userorder[installation_charge]": installationTotal,
+        "Userorder[user_carts_id]": cartItems
+          ?.map((item: any) => item.user_carts_id)
+          .join(","),
+      });
+    } else {
+      setMessage(`Payment status: ${paymentIntent?.status}`);
+    }
+  } catch (err: any) {
+    // 🔴 Handle 500 or other errors
+    const msg =
+      err?.response?.status === 500
+        ? "Server error (500): Please try again later."
+        : err?.message || "Something went wrong.";
+
+    setMessage(msg);
+    setSuccess(false);
+  } finally {
+    // 🟡 Delay resetting loading to prevent immediate re-click
+    setTimeout(() => setLoading(false), 1500);
+  }
+};
+
   return (
     <div style={{ margin: "0 auto", borderRadius: 14 }}>
       <div style={{ textAlign: "center", marginBottom: 16 }}>

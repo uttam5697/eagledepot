@@ -8,7 +8,6 @@ import { env } from "../../config/env";
 
 function InstallationDetail() {
   const [installation, setInstallation] = useState(null) as any;
-  console.log("🚀 ~ InstallationDetail ~ installation:", installation)
   const [loading, setLoading] = useState(true);
   const params = useParams() as any;
 
@@ -25,7 +24,6 @@ function InstallationDetail() {
           }
         );
         const data = await response.json();
-        console.log("🚀 ~ fetchInstallation ~ data:", data);
 
         if (data.status === 1) {
           setInstallation(data.data);

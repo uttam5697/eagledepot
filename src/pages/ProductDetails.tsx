@@ -32,7 +32,6 @@ export default function ProductDetailPage() {
     const [addWastage, setAddWastage] = useState(false);
     const [baseSqft, setBaseSqft] = useState(0); // always without wastage
     const [eachBoxes, setEachBoxes] = useState(1);
-    console.log("🚀 ~ ProductDetailPage ~ eachBoxes:", eachBoxes)
     const [isBuyNowClicked, setIsBuyNowClicked] = useState(false);
     const [productGallery, setProductGallery] = useState([]);
     // const [sqft, setSqft] = useState(0);
@@ -191,7 +190,6 @@ export default function ProductDetailPage() {
 
 
     const updateFromEachBoxes = (newBoxes: number) => {
-        console.log("🚀 ~ updateFromEachBoxes ~ newBoxes:", newBoxes)
         setEachBoxes(newBoxes);
     }
 
@@ -202,7 +200,6 @@ export default function ProductDetailPage() {
 
     // 📌 Boxes (calculated dynamically from displaySqft)
     const boxes = (Math.ceil(displaySqft / sqftPerBox))
-    const boxeseach = (Math.ceil(displaySqft / sqftPerBox)) || 1
 
     // 📌 Toggle wastage
     const handleWastageToggle = (checked: boolean) => {
@@ -587,21 +584,18 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
             </div>
+            <HearthBanner size="wide" />
 
             {/* </SwiperSlide> */}
             {productDataById?.product_specifications.length > 0 &&
                 <ProductSpecifications product_specifications={productDataById?.product_specifications} />}
-
-                <div className="xl:h-[300px] xl:w-[300px] md:h-[250px] md:w-[250px] h-[220px] w-[220px]  flex">
-                    <HearthBanner size="square" />
-                </div>
             {
                 <RelatedProduct
                     categoryId={productDataById?.product_category_id}
                     excludeProductId={productDataById?.product_id}
                 />
             }
-             
+
         </div>
     );
 }

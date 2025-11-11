@@ -70,7 +70,6 @@ const RelatedProduct: React.FC<RelatedProductProps> = ({
   }, [data, currentPage]);
 
   const  filteredProducts = allProducts.filter((product: any) => product.product_id !== excludeProductId); 
-    console.log("🚀 ~ ProductList ~ filteredProducts:", filteredProducts?.length)
 
   return (
     <section className="my-12">

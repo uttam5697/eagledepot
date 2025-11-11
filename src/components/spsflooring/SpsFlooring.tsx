@@ -5,7 +5,6 @@ import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useFooter } from "../../api/home";
 import { FiArrowUpRight } from "react-icons/fi";
-import HearthBanner from "../HearthWidget";
 
 export default function SpsFlooring({ productCategory }: any) {
   const prevRef = useRef<HTMLButtonElement>(null);
@@ -40,8 +39,6 @@ export default function SpsFlooring({ productCategory }: any) {
             </button>
           </div>
         </div>
-
-
 
         {/* Swiper Slider */}
         <Swiper

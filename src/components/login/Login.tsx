@@ -35,7 +35,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // 🚀 Redirect if already logged in
   useEffect(() => {
   if (authKey) {
     if (redirect) {

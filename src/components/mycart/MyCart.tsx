@@ -24,13 +24,10 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
   const [singleSelectedAddress, setSingleSelectedAddress] = useState<any>();
   const { data: generaldata } = useFooter(false);
   const { data: useShiping1 } = useShiping(false);
-  const [loadingIds, setLoadingIds] = useState<Record<number, boolean>>({});
-  console.log("🚀 ~ MyCart ~ loadingIds:", loadingIds)
   const { data: addressAll } = useAddress();
   const authkey = useUser()?.authKey;
 
-  const [miles, setMiles] = useState<string | null>(null);
-  console.log("🚀 ~ MyCart ~ miles:", miles)
+  // const [miles, setMiles] = useState<string | null>(null);
   const [charge, setCharge] = useState<number | null>(null);
   const [message, setMessage] = useState<string>("");
 
@@ -67,7 +64,6 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
 
     const newQuantity = action === "increase" ? currentQty + 1 : currentQty - 1;
     setQuantities((prev) => ({ ...prev, [id]: newQuantity }));
-    setLoadingIds((prev) => ({ ...prev, [id]: true }));
     const formData = new FormData();
     formData.append("user_carts_id", String(id));
     formData.append("Usercarts[product_id]", String(productId));
@@ -91,7 +87,7 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
       console.error("Error updating cart:", error);
       showToast(error?.response?.data?.message || "An error occurred", "error");
     } finally {
-      setLoadingIds((prev) => ({ ...prev, [id]: false }));
+      
     }
   };
 
@@ -107,7 +103,7 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
   // };
 
   const itemTotal = fetchedCartItems.reduce((sum: number, item: any) => {
-    const price = parseFloat(item?.type === "Box" ? item.product.price_per_box : item.product.price);
+    const price = parseFloat(item?.product?.type === "Box" ? item.product.price_per_box : item.product.price);
     const qty = quantities[item.user_carts_id] ?? item.quantity;
     return sum + price * qty;
   }, 0);
@@ -245,7 +241,7 @@ const [includeInstallation, setIncludeInstallation] = useState(true);
         return;
       }
 
-      setMiles(distance.toFixed(2));
+      // setMiles(distance.toFixed(2));
 
       const totalBoxes = fetchedCartItems.reduce(
         (acc: number, item: any) => acc + item.quantity,

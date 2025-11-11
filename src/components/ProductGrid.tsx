@@ -15,7 +15,6 @@ const PRODUCTS_PER_PAGE = 8;
 const ProductList: React.FC<CategoryListProps> = ({ categoryId, excludeProductId }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [allProducts, setAllProducts] = useState<any[]>([]);
-    console.log("🚀 ~ ProductList ~ allProducts:", allProducts)
     const [isNextPage, setIsNextPage] = useState(true);
 
     // Fetch just the current page of products; never update outside state in queryFn!
@@ -61,7 +60,6 @@ const ProductList: React.FC<CategoryListProps> = ({ categoryId, excludeProductId
     };
 
     const  filteredProducts = allProducts.filter((product: any) => product.product_id !== excludeProductId); 
-    console.log("🚀 ~ ProductList ~ filteredProducts:", filteredProducts)
 
     return (
         <AnimatedSection direction="up" delay={0.2}>
