@@ -7,7 +7,6 @@ import { useFooter } from "../../api/home";
 export default function Footer() {
   const { data: generaldata } = useFooter(false);
   const whatsappNumber = generaldata?.contact_no.replace(/\D+/g, '');
-  console.log("Footer ~ whatsappNumber:", whatsappNumber)
   const currentYear = new Date().getFullYear();
 
   return (

@@ -24,3 +24,8 @@ export const getShipingData = async (
   const res = await api.get("/beforeauth/getshippingcharge");
   return res.data;
 };
+
+export const getProductCategories = async () => {
+  const res = await api.post("/beforeauth/getproductcategory");
+  return res.data;
+};

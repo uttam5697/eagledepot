@@ -1,17 +1,35 @@
 // components/SeoMeta.tsx
 import { Helmet } from "react-helmet-async";
-import { useFooter } from "../api/home";
+import { useFooter, useProductCategories } from "../api/home";
 import { useEffect } from "react";
+import { useMatch } from "react-router-dom";
+import { paths } from "../config/path";
 
 const SeoMeta = () => {
   const { data: generaldata } = useFooter(false);
+  const categoryMatch = useMatch(paths.product.category.path);
+  const categoryId = categoryMatch?.params?.id;
+  const shouldLoadCategoryMeta = Boolean(categoryId);
+  const { data: productCategories } = useProductCategories(!shouldLoadCategoryMeta);
+  const activeCategoryMeta = shouldLoadCategoryMeta
+    ? productCategories?.find(
+        (category: any) =>
+          String(category?.product_category_id) === String(categoryId)
+      )
+    : undefined;
 
-
+  const metaSource = activeCategoryMeta ?? generaldata;
 
   // Use API data with fallbacks
-  const title = generaldata?.meta_title || "Eagle Flooring Depot – SPC and LVT flooring for less";
-  const description = generaldata?.meta_description || "Upper Level Flooring offers top-quality SPC vinyl floor installation in South Florida. Durable, stylish, and affordable—request your free estimate today.";
-  const keywords = generaldata?.meta_tag || "SPC vinyl flooring, vinyl floor installation, vinyl flooring South Florida, waterproof flooring, durable vinyl floors, free flooring estimate";
+  const title =
+    metaSource?.meta_title ||
+    "Eagle Flooring Depot – SPC and LVT flooring for less";
+  const description =
+    metaSource?.meta_description ||
+    "Upper Level Flooring offers top-quality SPC vinyl floor installation in South Florida. Durable, stylish, and affordable—request your free estimate today.";
+  const keywords =
+    metaSource?.meta_tag ||
+    "SPC vinyl flooring, vinyl floor installation, vinyl flooring South Florida, waterproof flooring, durable vinyl floors, free flooring estimate";
 
   // Force update meta tags directly
   useEffect(() => {
