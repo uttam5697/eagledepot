@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import AnimatedSection from "./ui/AnimatedSection";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type QueryFunctionContext } from "@tanstack/react-query";
 import api from "../lib/api";
 import ProductSkeleton from "./ui/ProductSkeleton";
 
@@ -58,8 +58,23 @@ const ProductList: React.FC<CategoryListProps> = ({ categoryId, excludeProductId
             setCurrentPage((prev) => prev + 1);
         }
     };
+    const getProductCategory = async (
+        _ctx: QueryFunctionContext<[string]>
+    ) => {
+        const { data } = await api.post('/beforeauth/getproductcategory');
+        return data;
+    };
+
+    const { data: productCategoryData } = useQuery({
+        queryKey: ['productCategory'],
+        queryFn: getProductCategory,
+        refetchOnWindowFocus: false,
+    });
 
     const  filteredProducts = allProducts.filter((product: any) => product.product_id !== excludeProductId); 
+    console.log("🚀 ~ ProductList ~ filteredProducts:", filteredProducts)
+    const productCategoryNames = productCategoryData?.find((category: any) => category.product_category_id === Number(categoryId))?.title;
+    console.log("🚀 ~ ProductList ~ productCategoryNames:", productCategoryNames)
 
     return (
         <AnimatedSection direction="up" delay={0.2}>
@@ -69,9 +84,10 @@ const ProductList: React.FC<CategoryListProps> = ({ categoryId, excludeProductId
                         <h1 className="text-primary flex-none italic 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay">
 
                             {
-                                filteredProducts?.find(
-                                    (category: any) => category.product_category_id === Number(categoryId)
-                                )?.title
+                                // filteredProducts?.find(
+                                //     (category: any) => category.product_category_id === Number(categoryId)
+                                // )?.title
+                                productCategoryNames
                             }
                         </h1>
                         {/* <div className="flex items-center gap-4 w-full">
