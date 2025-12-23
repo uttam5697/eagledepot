@@ -65,7 +65,7 @@ export default function Header() {
             <nav className="hidden navbar md:flex items-center xl:space-x-[50px] lg:space-x-[30px] md:space-x-[20px] space-x-[20px] mx-auto">
               <Link to="/" className={`text-white text-[18px] ${pathname === '/' ? 'active' : ''}`}>Home</Link>
               <Link to="/?product" className={`text-white text-[18px] ${pathname === '/?product' ? 'active' : ''}`}>Product</Link>
-              <Link to="/about" className={`text-white text-[18px] ${pathname === '/about' ? 'active' : ''}`}>About Us</Link>
+              <Link to="/about-us" className={`text-white text-[18px] ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>
               <Link to="/contact-us" className={`text-white text-[18px] ${pathname === '/contact-us' ? 'active' : ''}`}>Contact Us</Link>
               <Link to="/installation" className={`text-white text-[18px] ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
               {/* <Link to="/calculate" className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>Calculate</Link> */}
@@ -120,7 +120,7 @@ export default function Header() {
                   <Link to="/?product" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/?product' ? 'active' : ''}`}>
                     Product
                   </Link>
-                  <Link to="/about" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/about' ? 'active' : ''}`}>
+                  <Link to="/about-us" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/about-us' ? 'active' : ''}`}>
                     About Us
                   </Link>
                   <Link to="/contact-us" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/contact-us' ? 'active' : ''}`}>
