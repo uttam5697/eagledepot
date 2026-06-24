@@ -146,6 +146,48 @@ input:-webkit-autofill {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.gold { color: #C5A24C; }
+.border-gold { border-color: #C5A24C; }
+.bg-gold { background-color: #C5A24C; }
+.lux-input {
+  background: transparent;
+  border: none;
+  border: 1px solid #323335;
+  color: #fff;
+  padding: 4px 6px;
+  width: 100%;
+  outline: none;
+  font-size: 14px;
+  color-scheme: dark;
+}
+input[type="checkbox"].lux-check {
+  accent-color: #C5A24C;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+.section-title {
+  color: #C5A24C;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+.panel {
+  border: 1px solid #C5A24C;
+  border-radius: 4px;
+}
+.submit-btn {
+  background: #C5A24C;
+  color: #0a0a0a;
+  padding: 14px 36px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.submit-btn:hover { background: #e8c98a; }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

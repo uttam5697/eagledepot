@@ -56,11 +56,11 @@ export default {
       },
     },
     screens: {
-      "3xl": "1700px",
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1152px',
-      '2xl': '1280px',
+      md: "768px",   // tablets
+      lg: "1024px",  // small laptops
+      xl: "1280px",  // desktops
+      "2xl": "1536px", // large screens
+      "3xl": "1920px",
     },
     theme: {
       extend: {

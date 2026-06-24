@@ -19,6 +19,8 @@ import RedirectIfLoggedIn from "./components/RedirectIfLoggedIn";
 import DeliveryCalculator from "./components/delcalcu/Calculate";
 import InstallationDetail from "./components/installation/InstallationDetail";
 import Installation from "./components/installation/Installation";
+import Warranty from "./components/warranty/warranty";
+import TradePro from "./pages/TradePro";
 
 // Define the routes separately
 const routes = [
@@ -88,6 +90,14 @@ const routes = [
       {
         path: paths.installation.details.path,
         element: <InstallationDetail />,
+      },
+      {
+        path: "/warranty",
+        element: <Warranty />,
+      },
+      {
+        path: paths.tradepro.path,
+        element: <TradePro />,
       },
       {
         path: paths.mycart.path,

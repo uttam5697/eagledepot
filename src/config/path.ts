@@ -24,6 +24,10 @@ export const paths = {
         path: "/contact-us",
         getHref: () => "/contact-us",
     },
+    tradepro: {
+        path: "/trade-pro",
+        getHref: () => "/trade-pro",
+    },
     calculate:{
         path: "/calculate",
         getHref: () => "/calculate",

@@ -57,7 +57,7 @@ export default function Header() {
           <div className="flex items-center md:justify-between">
             {/* Logo */}
             <Link to="/" className="space-x-2">
-              <img src={Logo} alt="Eagle Logo" className="xl:w-[210px] lg:w-[180px] md:w-[150px] w-[120px]" />
+              <img src={Logo} alt="Eagle Logo" className="xl:h-[100px] flex-none lg:h-[90px] md:h-[80px] h-[70px]" />
             </Link>
 
             {/* Desktop Navigation */}
@@ -67,6 +67,8 @@ export default function Header() {
               <Link to="/about-us" className={`text-white text-[18px] ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>
               <Link to="/contact-us" className={`text-white text-[18px] ${pathname === '/contact-us' ? 'active' : ''}`}>Contact Us</Link>
               <Link to="/installation" className={`text-white text-[18px] ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
+              <Link to="/warranty" className={`text-white text-[18px] ${pathname === '/warranty' ? 'active' : ''}`}>Warranty</Link>
+              <Link to="/trade-pro" className={`text-white text-[18px] ${pathname === '/trade-pro' ? 'active' : ''}`}>Trade Pro</Link>
               {/* <Link to="/calculate" className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>Calculate</Link> */}
             </nav>
 
@@ -126,6 +128,8 @@ export default function Header() {
                     Contact Us
                   </Link>
                   <Link to="/installation" className={`text-white ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
+                  <Link to="/warranty" className={`text-white ${pathname === '/warranty' ? 'active' : ''}`}>Warranty</Link>
+                  <Link to="/trade-pro" className={`text-white ${pathname === '/trade-pro' ? 'active' : ''}`}>Trade Pro</Link>
                   {/* <Link to="/calculate" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>
                     Calculate
                   </Link>/calculate */}
