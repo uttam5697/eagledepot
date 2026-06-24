@@ -31,6 +31,7 @@ export default function ProductDetailPage() {
     const sqftPerBox = productDataById?.sqft_in_box; // 1 box covers 13.47 sqft
     const [addWastage, setAddWastage] = useState(false);
     const [baseSqft, setBaseSqft] = useState(0); // always without wastage
+    const [boxes, setBoxes] = useState(1);
     const [eachBoxes, setEachBoxes] = useState(1);
     const [isBuyNowClicked, setIsBuyNowClicked] = useState(false);
     const [productGallery, setProductGallery] = useState([]);
@@ -45,6 +46,7 @@ export default function ProductDetailPage() {
     useEffect(() => {
         if (productDataById?.sqft_in_box) {
             setBaseSqft(Number(productDataById.sqft_in_box || 0));
+            setBoxes(1);
         }
     }, [productDataById]);
 
@@ -183,9 +185,9 @@ export default function ProductDetailPage() {
 
     // 📌 Update from boxes
     const updateFromBoxes = (newBoxes: number) => {
-        // Always back-calc base sqft (without wastage)
-        let newBaseSqft = newBoxes * sqftPerBox;
-        setBaseSqft(newBaseSqft);
+        const validBoxes = Math.max(0, Math.floor(newBoxes));
+        setBoxes(validBoxes);
+        setBaseSqft(validBoxes * sqftPerBox);
     };
 
 
@@ -197,9 +199,6 @@ export default function ProductDetailPage() {
     const displaySqft = addWastage
         ? parseFloat((baseSqft * 1.1)?.toFixed(2))
         : parseFloat(baseSqft?.toFixed(2));
-
-    // 📌 Boxes (calculated dynamically from displaySqft)
-    const boxes = (Math.ceil(displaySqft / sqftPerBox))
 
     // 📌 Toggle wastage
     const handleWastageToggle = (checked: boolean) => {
@@ -515,7 +514,7 @@ export default function ProductDetailPage() {
                                         placeholder="Enter price per sqft"
                                         className="border rounded-md p-2 w-32 focus:ring-primary focus:border-primary"
                                     /> */}
-                                    <span className="text-sm text-gray-600">x {sqftPerBox * boxes} sqft = </span>
+                                    <span className="text-sm text-gray-600">x {displaySqft} sqft = </span>
                                     <span className="font-bold text-primary">${(displaySqft * generaldata?.installation_charge).toFixed(2)}</span>
                                 </div>
                             )}

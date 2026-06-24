@@ -45,7 +45,6 @@ export default function WeeklyBestsellers() {
 
     // 4. Sorting handler
     const handleSortChange = (value: string) => {
-        console.log('Sorting by:', value);
         setCategory(value);
     };
 
@@ -63,12 +62,12 @@ export default function WeeklyBestsellers() {
             <div className="container">
                 <div className="2xl:mb-10 xl:mb-8 lg:mb-6 mb-4 flex justify-between items-center flex-wrap">
                     <div>
-                        <h1 className="text-black font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
+                        <h2 className="text-black font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
                             {generaldata?.weekly_bestsellers_title}
-                        </h1>
-                        <h1 className="text-black 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
+                        </h2>
+                        <h3 className="text-black 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
                             {generaldata?.weekly_bestsellers_sub_title}
-                        </h1>
+                        </h3>
                     </div>
                     <div className="flex items-end md:gap-4 gap-2 flex-col">
                         <SortDropdown text="Sort by" sortbytext={false} width={"xl:w-[200px] lg:w-[180px] md:w-[160px] w-[140px]"} options={productCategoryData} onChange={handleSortChange} />

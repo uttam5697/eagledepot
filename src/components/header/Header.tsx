@@ -38,7 +38,6 @@ export default function Header() {
   }, [isMenuOpen, isCartOpen]);
 
   useEffect(() => {
-    console.log('Cart items:', fetchedCartItems);
     refetch();
   }, []);
 

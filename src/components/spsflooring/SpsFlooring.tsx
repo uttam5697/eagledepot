@@ -2,14 +2,13 @@ import { useRef } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useFooter } from "../../api/home";
 import { FiArrowUpRight } from "react-icons/fi";
 
 export default function SpsFlooring({ productCategory }: any) {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
-  const navigate = useNavigate();
   const { data: generaldata } = useFooter(false);
   return (
     <section className="xl:mb-[100px] overflow-hidden lg:mb-[80px] md:mb-[60px] mb-[40px] xl:mt-[80px] lg:mt-[60px] md:mt-[40px] mt-[20px]">
@@ -17,12 +16,12 @@ export default function SpsFlooring({ productCategory }: any) {
         {/* Header */}
         <div className="2xl:mb-10 xl:mb-8 lg:mb-6 md:mb-4 mb-2 flex justify-between items-center">
           <div>
-            <h1 className="font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
+            <h2 className="font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
               {generaldata?.sps_flooring_title}
-            </h1>
-            <h1 className="text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
+            </h2>
+            <h3 className="text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
               {generaldata?.sps_flooring_sub_title}
-            </h1>
+            </h3>
           </div>
           <div className="flex lg:gap-5 md:gap-3 gap-2 items-center">
             <button
@@ -86,21 +85,14 @@ export default function SpsFlooring({ productCategory }: any) {
                             __html: item.description,
                           }}
                         />
-                        <div
-                          onClick={() =>
-                            navigate(
-                              `/products/category/${item.product_category_id}`
-                            )
-                          }
-                          className="max-w-[188px]"
-                        >
-                          <a
-                            href="#"
+                        <div className="max-w-[188px]">
+                          <Link
+                            to={`/products/category/${item.product_category_id}`}
                             className="group text-black xl:text-[16px] lg:text-[14px] md:text-sm text-xs font-quicksand font-bold md:p-3 p-2 bg-white rounded-full flex justify-between items-center gap-4"
                           >
                             See Detail
                             <FiArrowUpRight className="lg:text-base md:text-2sm text-sm group-hover:rotate-45 duration-300 transition-all" />
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>

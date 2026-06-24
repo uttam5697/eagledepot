@@ -13,12 +13,12 @@ export default function ShoppingBrand() {
       <div className="container">
         <div className="2xl:mb-10 xl:mb-8 lg:mb-6 md:mb-4 mb-2 flex justify-between items-center">
           <div>
-            <h1 className="text-black font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
+            <h2 className="text-black font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
               Shopping by
-            </h1>
-            <h1 className="text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
+            </h2>
+            <span className="text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
               Brands
-            </h1>
+            </span>
           </div>
           <div className="flex lg:gap-5 md:gap-3 gap-2 items-center">
             <button

@@ -15,12 +15,12 @@ export default function WhatOurClients() {
       <div className="container">
         <div className="2xl:mb-[60px] xl:mb-[50px] lg:mb-[40px] md:mb-[30px] mb-[20px] flex justify-between items-center">
           <div>
-            <h1 className="text-black font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
+            <h2 className="text-black font-extralight 2xl:text-[40px] xl:text-[30px] lg:text-[24px] md:text-[20px] text-[18px] xl:leading-none leading-normal">
               {generaldata?.clients_say_title}
-            </h1>
-            <h1 className="text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
+            </h2>
+            <h3 className="text-primary 2xl:text-[48px] xl:text-[38px] lg:text-[28px] md:text-[24px] text-[20px] leading-normal font-playfairDisplay -mt-3">
               {generaldata?.clients_say_sub_title}
-            </h1>
+            </h3>
           </div>
           <div className="flex lg:gap-5 md:gap-3 gap-2 items-center">
             <button

@@ -72,9 +72,7 @@ const ProductList: React.FC<CategoryListProps> = ({ categoryId, excludeProductId
     });
 
     const  filteredProducts = allProducts.filter((product: any) => product.product_id !== excludeProductId); 
-    console.log("🚀 ~ ProductList ~ filteredProducts:", filteredProducts)
     const productCategoryNames = productCategoryData?.find((category: any) => category.product_category_id === Number(categoryId))?.title;
-    console.log("🚀 ~ ProductList ~ productCategoryNames:", productCategoryNames)
 
     return (
         <AnimatedSection direction="up" delay={0.2}>

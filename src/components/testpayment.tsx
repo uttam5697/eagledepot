@@ -42,7 +42,6 @@ export default function PaymentForm() {
       },
       (token: string, response: any) => {
         if (token) {
-          console.log("Token:", token, "Response:", response);
           setCardToken(token);
         } else {
           console.error("Tokenization error:", response);
