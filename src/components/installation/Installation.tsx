@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AnimatedSection from "../ui/AnimatedSection";
 import { env } from "../../config/env";
-import { CalendarCheck, Ruler, Layers, Hammer, BadgeCheck } from 'lucide-react'
+import { CalendarCheck, Ruler, Layers, Hammer } from 'lucide-react'
 import { AiOutlineSafety } from "react-icons/ai";
 import { LiaAwardSolid } from "react-icons/lia";
 import { MdOutlineAccessTime } from "react-icons/md";
@@ -66,6 +66,7 @@ const badges = [
 
 export default function Installation() {
   const [installations, setInstallations] = useState([]);
+  console.log("🚀 ~ Installation ~ installations:", installations)
   const [loading, setLoading] = useState(true); // ✅ default to true while fetching
 
   useEffect(() => {
