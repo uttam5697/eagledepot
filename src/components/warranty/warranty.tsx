@@ -40,7 +40,7 @@ const fallbackWarranty: WarrantyData = {
   title: "10-Year Limited Warranty",
   sub_title:
     "We stand behind our quality. Enjoy peace of mind with our 10-year limited warranty on all installations.",
-  image: "https://luxurylayers.pro/luxurylayerfloor/uploads/images/installation/i4ukwffo0h4z884ms3qfxndbz8tegrif.png",
+  image: "https://eagleflooringdepot.com/eagleflooringdepot/uploads/images/warranty/0abp5hzdm6849mtgncjpat3x41tk2lbb.png",
   document: [],
   certificate: [],
 };

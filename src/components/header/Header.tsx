@@ -67,8 +67,8 @@ export default function Header() {
               <Link to="/about-us" className={`text-white text-[18px] ${pathname === '/about-us' ? 'active' : ''}`}>About Us</Link>
               <Link to="/contact-us" className={`text-white text-[18px] ${pathname === '/contact-us' ? 'active' : ''}`}>Contact Us</Link>
               <Link to="/installation" className={`text-white text-[18px] ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
-              {/* <Link to="/warranty" className={`text-white text-[18px] ${pathname === '/warranty' ? 'active' : ''}`}>Warranty</Link>
-              <Link to="/trade-pro" className={`text-white text-[18px] ${pathname === '/trade-pro' ? 'active' : ''}`}>Trade Pro</Link> */}
+               <Link to="/warranty" className={`text-white text-[18px] ${pathname === '/warranty' ? 'active' : ''}`}>Warranty</Link>
+              {/* <Link to="/trade-pro" className={`text-white text-[18px] ${pathname === '/trade-pro' ? 'active' : ''}`}>Trade Pro</Link>  */}
               {/* <Link to="/calculate" className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>Calculate</Link> */}
             </nav>
 
@@ -128,8 +128,8 @@ export default function Header() {
                     Contact Us
                   </Link>
                   <Link to="/installation" className={`text-white ${pathname === '/installation' ? 'active' : ''}`}>Installation</Link>
-                  {/* <Link to="/warranty" className={`text-white ${pathname === '/warranty' ? 'active' : ''}`}>Warranty</Link>
-                  <Link to="/trade-pro" className={`text-white ${pathname === '/trade-pro' ? 'active' : ''}`}>Trade Pro</Link> */}
+                   <Link to="/warranty" className={`text-white ${pathname === '/warranty' ? 'active' : ''}`}>Warranty</Link>
+                  {/* <Link to="/trade-pro" className={`text-white ${pathname === '/trade-pro' ? 'active' : ''}`}>Trade Pro</Link>  */}
                   {/* <Link to="/calculate" onClick={() => setIsMenuOpen(false)} className={`text-white ${pathname === '/calculate' ? 'active' : ''}`}>
                     Calculate
                   </Link>/calculate */}
