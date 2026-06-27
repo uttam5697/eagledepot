@@ -87,8 +87,12 @@ const routes = [
         path: paths.installation.path,
         element: <Installation />,
       },
+      // {
+      //   path: paths.installation.details.path,
+      //   element: <InstallationDetail />,
+      // },
       {
-        path: paths.installation.details.path,
+        path: "/installation-details",
         element: <InstallationDetail />,
       },
       {

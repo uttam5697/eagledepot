@@ -69,5 +69,9 @@ export const paths = {
         path: "/terms-and-conditions",
         getHref: () => "/terms-and-conditions",
     },
+    tradeProTermsAndConditions: {
+        path: "/trade-pro-terms-and-conditions",
+        getHref: () => "/trade-pro-terms-and-conditions",
+    },
 
 } as const;
